@@ -16,7 +16,7 @@ def request_user_info_google(credentials):
     profile information, including full name and photo, and stores it in the
     Flask session.
     """
-    http            = httplib2.Http()
+    http = httplib2.Http()
     credentials.authorize(http)
 
     try:
