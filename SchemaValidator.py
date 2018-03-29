@@ -5,6 +5,7 @@ def validate_userbycredential(data):
         return 400, False, 'post is not in json format or empty'
     try:
         schema = Schema({   'token': basestring,
+                            'client_id' : basestring,
                             'provider':  Regex(r'(google|facebook|twitter|woofwoof)')
                         })
         isValid = schema.validate(data)

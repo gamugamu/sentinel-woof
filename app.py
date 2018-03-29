@@ -10,6 +10,8 @@ import json
 import hashlib
 import requests
 
+from flask_sentinel.data import Storage
+
 app = Flask(__name__)
 ResourceOwnerPasswordCredentials(app)
 
@@ -36,21 +38,28 @@ def userbycredential():
             #TODO user_info doit être similaire entre woofwoof, google, yahoo, et twitter
             user_id     = user_cloud_info["id"]
             user_pass   = hashlib.sha224(user_id).hexdigest()
+            # note: _user est privé. Ne pas exposer aux clients.
             _user       = UserHelper.user_from_credential(user_id, user_pass)
-            # note: _user est privé! A ne pas exposer
-            #TODO client_id passer par generateid
-            r = requests.post("http://localhost:5000/oauth/token", data={
-                'client_id': 'Qbp9mk3XgNFEu8NCCCZ06QiOvV9goTa1DLmcwmjX',
-                'grant_type': 'password',
-                'username': user_id,
-                'password': user_pass})
+            r           = requests.post("http://localhost:5000/oauth/token",
+                            data = {
+                                'client_id' : data["client_id"],
+                                'grant_type': 'password',
+                                'username'  : user_id,
+                                'password'  : user_pass})
 
-            token = r.text
-            print("result post", r.text)
+            token = json.loads(r.text)
+            # le client peut être invalide.
+            if "error" in token:
+                token = {}
+                errorMessage = 'cliend_id is invalid'
 
+            else:
+                #test
+                T = Storage.get_token(token["access_token"])
+                print "info: ", T, T.user, str(T.user._id)
+                
         # bad credential
         else:
-            print "something went bad. Abort"
             errorMessage = 'credential is invalid'
 
     # retourne le compte
