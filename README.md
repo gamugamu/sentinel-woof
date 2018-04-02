@@ -1,5 +1,6 @@
 #conf waf
 #docker image
+docker run --rm -it -p 5000:8080 -d cryptodraco/sentinel-dev:v0.0.1
 
 docker pull redis
 # port redis par defaut 6379
