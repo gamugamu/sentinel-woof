@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, request
+from flask import Flask, request, render_template
 from flask_sentinel import ResourceOwnerPasswordCredentials, oauth
 from flask_sentinel.data import Storage
 import SchemaValidator as schema
@@ -57,7 +57,7 @@ def userbycredential():
                 #test
                 T = Storage.get_token(token["access_token"])
                 print "info: ", T, T.user, str(T.user._id)
-                
+
         # bad credential
         else:
             errorMessage = 'credential is invalid'
@@ -67,7 +67,7 @@ def userbycredential():
 
 @app.route('/')
 def home():
-    return "hello"
+    return render_template('doc.html')
 
 if __name__ == '__main__':
     app.run(ssl_context='adhoc')

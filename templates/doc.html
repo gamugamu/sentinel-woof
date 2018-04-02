@@ -1,0 +1,29 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>The HTML5 Herald</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+  <div class="container">
+    doc - version 0.0
+    <div id="app">
+      ${ message }
+    </div>
+    <a class="waves-effect waves-light btn">button</a>
+    <div class="row">
+      <div class="col s12">This div is 12-columns wide on all screen sizes</div>
+      <div class="col s6">6-columns (one-half)</div>
+      <div class="col s6">6-columns (one-half)</div>
+    </div>
+  </div>
+
+</head>
+
+<body>
+  <script src={{url_for('static', filename='doc.js')}}></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+</body>
+</html>
