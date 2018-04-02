@@ -6,24 +6,26 @@
   <meta name="description" content="The HTML5 Herald">
   <meta name="author" content="SitePoint">
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
 
   <div class="container">
-    doc - version 0.0
+    <h2>Woof-service</h2>
+    <h4>version 0.0</h4>
     <div id="app">
-      ${ message }
+      ${ connect }
     </div>
-    <a class="waves-effect waves-light btn">button</a>
-    <div class="row">
-      <div class="col s12">This div is 12-columns wide on all screen sizes</div>
-      <div class="col s6">6-columns (one-half)</div>
-      <div class="col s6">6-columns (one-half)</div>
+
+    <div class="step">
+      <h6>Authentification sur woof</h6>
+      <p>Permet de récupérer un token d'authentification pour les accès personels woof</p>
+      <code>curl -i -d '{"client_id" : "Qbp9mk3XgNFEu8NCCCZ06QiOvV9goTa1DLmcwmjX", "provider":"google", "token":"ya29.GluNBW5S0GMf2sL4N96Ou4EUT9khvH5jPb0Rt6qL4U3JaPwqps_n1bQdVGvaKEaYU5hNY15oqKQTOqCGksBw-vSsDFawowsrp5rcNW-7sXn-KNInEg_rXzUuiPhy"}' -H "Content-Type: application/json" -X POST https://woof.wannanosuurus.com</code>
     </div>
   </div>
 
 </head>
 
 <body>
+  <link rel="stylesheet" href={{url_for('static', filename='doc.css')}}></link>
   <script src={{url_for('static', filename='doc.js')}}></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
 </body>
 </html>
