@@ -23,7 +23,7 @@ ResourceOwnerPasswordCredentials(app)
 def restricted_access():
     return "You made it through and accessed the protected resource!"
 
-@app.route('/userbycredential', methods=['POST'])
+@app.route('/me/authWithCredential', methods=['POST'])
 def userbycredential():
     # valide que les clès sont bonnes
     code, isValid, errorMessage = schema.validate_userbycredential(request.json)
