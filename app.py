@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, request
+from flask import Flask, request, render_template
 from flask_sentinel import ResourceOwnerPasswordCredentials, oauth
 import SchemaValidator as schema
 import WoofToken_FromCredential as credConvertor
@@ -16,7 +16,7 @@ ResourceOwnerPasswordCredentials(app)
 def restricted_access():
     return "You made it through and accessed the protected resource!"
 
-@app.route('/userbycredential', methods=['POST'])
+@app.route('/me/authWithCredential', methods=['POST'])
 def userbycredential():
     # valide que les clès sont bonnes
     code, isValid, errorMessage = schema.validate_userbycredential(request.json)
@@ -30,7 +30,7 @@ def userbycredential():
 
 @app.route('/')
 def home():
-    return "hello"
+    return render_template('doc.html')
 
 if __name__ == '__main__':
     app.run(ssl_context='adhoc')
