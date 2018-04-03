@@ -9,40 +9,34 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.13.0/themes/prism-tomorrow.css"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.13.0/plugins/line-numbers/prism-line-numbers.css"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <div class="container">
     <h2>Woof-services</h2>
     <h4>version 0.0</h4>
-    <div class="step">
-      <h6>Authentification</h6>
-      <route><b>POST</b> https://woof.wannanosuurus.com<b>/me/authWithCredential</b></route>
-      <p>Permet de récupérer un token d'authentification pour les accès personels woof</p>
-      <table class="striped">
-       <thead>
-         <tr>
-             <th>key</th>
-             <th>value</th>
-         </tr>
-       </thead>
-       <tbody>
-         <tr>
-           <th>client_id</th>
-           <td>client secret id</td>
-         <tr>
-           <th>provider</th>
-           <td>le compte sur lequel se logger: google, yahoo, twitter, woof</td>
-         </tr>
-         <tr>
-           <th>token</th>
-           <td>le token d'accèe fourni par le provider</td>
-         </tr>
-         <tr>
-           <th>token_secret</th>
-           <td>(facultatif) token secret si fourni par le provider (ex twitter)</td>
-         </tr>
-       </tbody>
-     </table>
-      <pre><code class="language-bash line-numbers">curl -i -d '{"client_id" : "Qbp9mk3XgNFEu8NCCCZ06QiOvV9goTa1DLmcwmjX", "provider":"google", "token":"ya29.GluNBW5S0GMf2sL4N96Ou4EUT9khvH5jPb0Rt6qL4U3JaPwqps_n1bQdVGvaKEaYU5hNY15oqKQTOqCGksBw-vSsDFawowsrp5rcNW-7sXn-KNInEg_rXzUuiPhy"}' -H "Content-Type: application/json" -X POST https://woof.wannanosuurus.com</code></pre>
+    <hr flex/></span>
+    <div id="app">
+      <p>Teste directement les services!<p>
+      <div class="yellow input-field col s6" style="padding-bottom:10px">
+          <i class="material-icons prefix">card_membership</i>
+          <input v-model="client_id" id="icon_prefix" type="text" placeholder="Client id" class="validate">
+          <a class="red lighten-1 waves-effect waves-light btn">Je n'ai pas de client-id</a>
+      </div>
+      <step red lighten-1
+        title       = "Authentification"
+        method      = "POST"
+        url_root    = {{url_root}}
+        route       = "me/authWithCredential"
+        use         = "Permet de récupérer un token d'authentification pour les accès personels woof."
+        bash_cmd    = "curl -i -d '{&quot;client_id&quot; : &quot;Qbp9mk3XgNFEu8NCCCZ06QiOvV9goTa1DLmcwmjX&quot;, &quot;provider&quot;:&quot;google&quot;, &quot;token&quot;:&quot;xxx&quot;}'-H &quot;Content-Type: application/json&quot; -X POST https://woof.wannanosuurus.com"
+        v-bind:data = "{
+          'client_id'     : 'Le client id secret reçu par l\'administrateur',
+          'provider'      : 'le compte sur lequel se logger: google, yahoo, twitter, woof',
+          'token'         : 'le token d\'accès fourni par le provider',
+          'token_secret'  : '(facultatif) token secret si fourni par le provider (ex twitter)'}"
+        m_return      = "{&quot;access_token&quot;: &quot;TTfDCMod9D8QIEg8nrFFaYsVrNKs51&quot;, &quot;token_type&quot;: &quot;Bearer&quot;, &quot;expires_in&quot;: 3600, &quot;refresh_token&quot;: &quot;j6aLEb74ce51fLWjW2WBgojUnJEuoG&quot;, &quot;scope&quot;: &quot;&quot;}, &quot;error&quot;: &quot;None&quot;">
+
+      </step>
     </div>
   </div>
 
@@ -52,6 +46,7 @@
   <script src={{url_for('static', filename='doc.js')}}></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.13.0/prism.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.13.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
 
   <link rel="stylesheet" href={{url_for('static', filename='doc.css')}}></link
 </body>

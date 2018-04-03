@@ -10,3 +10,11 @@
         font-size: 0.8em;
     }
 }
+
+#table td {
+    border-right: 5px solid red
+}
+
+.lastCell {
+    border-right: none;
+}
