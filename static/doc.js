@@ -1,5 +1,5 @@
 Vue.component('step', {
-  props: ['title', 'method', 'url_root', 'route', 'use', 'bash_cmd', 'data', 'm_return'],
+  props: ['title', 'method', 'url_root', 'route', 'use', 'bash_cmd', 'data', 'm_return', 'client_id', 'provider'],
   template: `
     <div>
       </br>
@@ -20,7 +20,7 @@ Vue.component('step', {
        </tr>
        </tbody>
        </table>
-      <pre><code class="language-bash line-numbers">{{bash_cmd}}</code></pre>
+      <pre><code class="language-bash line-numbers">curl -i -d '{\"client_id\" : {{client_id}},  {{bash_cmd}} -H &quot;Content-Type: application/json&quot; -X {{method}} {{url_root}}{{route}}}</code></pre>
       <b>Return</b>
       <div class="grey lighten-2">
         <i><p>{{m_return}}</p></i>
@@ -33,6 +33,12 @@ var app = new Vue({
   el: '#app',
   delimiters: ['${', '}'],
   data:{
-    client_id:"RUZUZU"
-  }
+    client_id: sessionStorage.getItem("client_id")
+  },
+  watch: {
+        'client_id': function(val, oldVal){
+          console.log("called");
+          sessionStorage.setItem("client_id", val)
+      }
+    }
 });
