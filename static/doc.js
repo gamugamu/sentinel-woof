@@ -20,7 +20,7 @@ Vue.component('step', {
        </tr>
        </tbody>
        </table>
-      <pre><code class="language-bash line-numbers">curl -i -d '{\"client_id\" : {{client_id}},  {{bash_cmd}} -H &quot;Content-Type: application/json&quot; -X {{method}} {{url_root}}{{route}}}</code></pre>
+      <pre><code class="language-bash line-numbers">curl -i -d '{\"client_id\" : "{{client_id}}",  {{bash_cmd}} -H &quot;Content-Type: application/json&quot; -X {{method}} {{url_root}}{{route}}}</code></pre>
       <b>Return</b>
       <div class="grey lighten-2">
         <i><p>{{m_return}}</p></i>
@@ -28,6 +28,8 @@ Vue.component('step', {
     </div>
   `
 })
+
+//var bsh_me_auth = "\"provider\";:&quot;google&quot;, &quot;token&quot;:&quot;xxx&quot;}''"
 
 var app = new Vue({
   el: '#app',
@@ -39,6 +41,10 @@ var app = new Vue({
         'client_id': function(val, oldVal){
           console.log("called");
           sessionStorage.setItem("client_id", val)
-      }
+        },
+        'provider': function(val, oldVal){
+        console.log("p called");
+        sessionStorage.setItem("provider", val)
+        }
     }
 });

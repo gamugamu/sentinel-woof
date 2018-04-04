@@ -10,41 +10,46 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.13.0/themes/prism-tomorrow.css"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.13.0/plugins/line-numbers/prism-line-numbers.css"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+  <nav>
+    <div class="nav-wrapper grey darken-3">
+      <i class="large brand-logo logo left material-icons prefix light-green-text accent-3">art_track</i>
+    </div>
+  </nav>
+  <img class="header" src={{url_for('static', filename='img/header.png')}} alt="header">
 
   <div class="container">
+
     <h2>Woof-services</h2>
     <h4>version 0.0</h4>
     <hr flex/></span>
     <div id="app">
       <p>Teste directement les services!<p>
-      <div class="yellow input-field col s6">
-          <i class="material-icons prefix">card_membership</i>
+      <div class="cyan lighten-5 input-field col s6">
+          <i class="material-icons prefix black-text">card_membership</i>
           <input v-model="client_id" type="text" placeholder="Client id" class="validate">
-          <a class="red lighten-1 waves-effect waves-light btn">Je n'ai pas de client-id</a>
+          <a class="grey darken-3 lighten-1 waves-effect waves-light btn">Je n'ai pas de client-id</a>
       </div>
 
-      <div class="cyan lighten-4 input-field col s6">
+      <div class="cyan lighten-5 input-field col s6">
         </br>
         <form action="#">
           <center>
             <label>
               <input class="with-gap" name="group1" type="radio" checked />
-              <span>Google</span>
+              <span class="grey-text text-darken-2">Google</span>
             </label>
-            <label>
-              <input class="with-gap" name="group1" type="radio" />
-              <span>Twitter</span>
-            </label>
-            <label>
+            <label class="text-darken-2">
               <input class="with-gap" name="group1" type="radio"  />
-              <span>Facebook</span>
+              <span class="grey-text text-darken-2">Facebook</span>
             </label>
           </center>
         </form>
-        <div class="yellow input-field">
-          <i class="dark-text inline-icon material-icons prefix">confirmation_number</i>
-          <input  type="text" placeholder="auth-login_access" class="input-field validate">
-          <input  type="text" placeholder="secret_access" class="input-field validate">
+        <div class="white input-field">
+          <i class="black-text darken-3 inline-icon material-icons prefix">confirmation_number</i>
+          <input  placeholder="auth_token" name="f" type="text" class="validate">
         </div>
       </div>
 
@@ -69,14 +74,11 @@
     </div>
   </div>
 
-</head>
-
-<body>
   <script src={{url_for('static', filename='doc.js')}}></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.13.0/prism.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.13.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
-
+  <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
   <link rel="stylesheet" href={{url_for('static', filename='doc.css')}}></link
 </body>
 </html>
