@@ -9,7 +9,8 @@ import json
 
 def credentialConversion(data):
     # valide que le credential du provider est bon
-    code, user_cloud_info = credential.request_user_info_by_token(data["token"], data["provider"])
+    code, user_cloud_info = credential.request_user_info_by_token(
+        data.get("authlogin"), data.get("secret"), data.get("provider"))
     token           = {}
     errorMessage    = ""
 

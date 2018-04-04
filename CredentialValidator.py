@@ -3,12 +3,17 @@ import httplib2
 import json
 from oauth2client.client import AccessTokenCredentials
 
-def request_user_info_by_token(token, validator):
-    credentials = AccessTokenCredentials(token, 'user-agent-value')
+def request_user_info_by_token(authlogin, secret = "", provider = ""):
+    credentials = AccessTokenCredentials(authlogin, 'user-agent-value')
     # Si c'est un compte local (woofwoof) alors il faut vérifier que la clès du compte existe
     # Si la clès n'existe pas, le compte n'existe pas
     #request_user_info_twitter(credentials)
-    return request_user_info_google(credentials)
+
+    return {
+        'google'    : request_user_info_google(credentials),
+        'facebook'  : "non implemented",
+        'twitter'   : "non implemented"
+    }[provider]
 
 def request_user_info_twitter(credentials):
     """
@@ -47,6 +52,7 @@ def request_user_info_google(credentials):
             return resp.status, "Error while obtaining user profile: \n%s: %s" % resp, content
 
         profil = json.loads(content.decode('utf-8'))
+        print resp, content
         return resp.status, profil
     # mauvais token
     except Exception as e:
