@@ -17,6 +17,7 @@ def credentialConversion(data):
     if code == 200:
         #TODO user_info doit être similaire entre woofwoof, google, yahoo, et twitter
         user_id     = user_cloud_info["id"]
+        print "---> id",  user_cloud_info["id"]
         user_pass   = hashlib.sha224(user_id).hexdigest()
         # note: _user est privé. Ne pas exposer aux clients.
         _user       = UserHelper.user_from_credential(user_id, user_pass)
