@@ -1,5 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Varela+Round');
 
-font-family: 'Nunito', sans-serif;
+
+html {
+  font-family: 'Varela Round', sans-serif;
+}
 
 @media (min-width: 623px) {
     html {
@@ -21,4 +25,11 @@ font-family: 'Nunito', sans-serif;
 
 .header{
   width:100%;
+}
+
+.box{
+  padding: 5px;
+  border-style: dashed;
+  border-width: 1px;
+  border-color: gray;
 }

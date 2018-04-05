@@ -5,6 +5,8 @@
   <title>The HTML5 Herald</title>
   <meta name="description" content="The HTML5 Herald">
   <meta name="author" content="SitePoint">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.13.0/themes/prism-tomorrow.css"></script>
@@ -15,44 +17,49 @@
 <body>
   <nav>
     <div class="nav-wrapper grey darken-3">
-      <i class="large brand-logo logo left material-icons prefix light-green-text accent-3">art_track</i>
+      <i class="left large brand-logo logo logo material-icons prefix teal-text text-accent-3">art_track</i>
+      <ul id="nav-mobile" class="right">
+          <li><a href="badges.html">  </a></li>
+          <li><a href="collapsible.html">version 0.0</a></li>
+        </ul>
     </div>
+
   </nav>
-  <img class="header" src={{url_for('static', filename='img/header.png')}} alt="header">
+  <img class="header" src={{url_for('static', filename='img/header.jpg')}} alt="header">
 
   <div class="container">
-
-    <h2>Woof-services</h2>
-    <h4>version 0.0</h4>
+    <h4>Woof API-services</h4>
     <hr flex/></span>
     <div id="app">
-      <p>Teste directement les services!<p>
-      <div class="cyan lighten-5 input-field col s6">
-          <i class="material-icons prefix black-text">card_membership</i>
-          <input v-model="client_id" type="text" placeholder="Client id" class="validate">
-          <a class="grey darken-3 lighten-1 waves-effect waves-light btn">Je n'ai pas de client-id</a>
-      </div>
 
-      <div class="cyan lighten-5 input-field col s6">
-        </br>
-        <form action="#">
-          <center>
-            <label>
-              <input class="with-gap" name="group1" type="radio" checked />
-              <span class="grey-text text-darken-2">Google</span>
-            </label>
-            <label class="text-darken-2">
-              <input class="with-gap" name="group1" type="radio"  />
-              <span class="grey-text text-darken-2">Facebook</span>
-            </label>
-          </center>
-        </form>
-        <div class="white input-field">
-          <i class="black-text darken-3 inline-icon material-icons prefix">confirmation_number</i>
-          <input  placeholder="auth_token" name="f" type="text" class="validate">
+      <div class="box">
+        <p>Teste directement les services!<p>
+        <div class="cyan lighten-5 input-field col s6">
+            <i class="material-icons prefix red-text text-darken-1">card_membership</i>
+            <input v-model="client_id" type="text" placeholder="Client id" class="validate">
+            <a class="grey darken-3 lighten-1 waves-effect waves-light btn">Je n'ai pas de client-id</a>
         </div>
-      </div>
 
+        <div class="cyan lighten-5 input-field col s6">
+          </br>
+          <form action="#">
+            <center>
+              <label>
+                <input v-model="provider" id="google" value="Google" class="with-gap" name="group1" type="radio" checked />
+                <span class="grey-text text-darken-2">Google</span>
+              </label>
+              <label class="text-darken-2">
+                <input v-model="provider" id="facebook" value="Facebook" class="with-gap" name="group1" type="radio" checked />
+                <span class="grey-text text-darken-2">Facebook</span>
+              </label>
+            </center>
+          </form>
+          <div class="white input-field">
+            <i class="red-text text-darken-1 inline-icon material-icons prefix">confirmation_number</i>
+            <input v-model="auth_login" placeholder="auth login" name="f" type="text" class="validate">
+          </div>
+        </div><!-- forms -->
+      </div><!-- box -->
 
       <step red lighten-1
         title       = "Authentification"
@@ -60,14 +67,17 @@
         url_root    = {{url_root}}
         route       = "me/authwithcredential"
         use         = "Permet de récupérer un token d'authentification pour les accès personels woof."
-        bash_cmd    = "&quot;provider&quot;:&quot;google&quot;, &quot;token&quot;:&quot;xxx&quot;}''"
+        v-bind:curl_cmd = "{
+          'client_id'     : '*client_id',
+          'provider'      : '*provider',
+          'authlogin'     : '*auth_login',
+          'secret'        : '*secret'}"
+
         v-bind:data = "{
           'client_id'     : 'Le client id secret reçu par l\'administrateur',
           'provider'      : 'le compte sur lequel se logger: google, yahoo, twitter, woof',
           'token'         : 'le token d\'accès fourni par le provider',
           'token_secret'  : '(facultatif) token secret si fourni par le provider (ex twitter)'}"
-        v-bind:client_id   = "client_id"
-        v-bind:provider    = "provider"
         m_return      = "{&quot;access_token&quot;: &quot;TTfDCMod9D8QIEg8nrFFaYsVrNKs51&quot;, &quot;token_type&quot;: &quot;Bearer&quot;, &quot;expires_in&quot;: 3600, &quot;refresh_token&quot;: &quot;j6aLEb74ce51fLWjW2WBgojUnJEuoG&quot;, &quot;scope&quot;: &quot;&quot;}, &quot;error&quot;: &quot;None&quot;">
 
       </step>
@@ -78,7 +88,6 @@
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.13.0/prism.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.13.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
-  <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
   <link rel="stylesheet" href={{url_for('static', filename='doc.css')}}></link
 </body>
 </html>
