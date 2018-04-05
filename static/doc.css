@@ -17,6 +17,13 @@ html {
     }
 }
 
+hr.style {
+  margin-top: 20px;
+	border-top: 1px dotted #8c8b8b;
+	border-bottom: 1px dotted #fff;
+  margin-bottom: -10px;
+}
+
 .logo{
   width: 40px;
   height:40px;
@@ -34,7 +41,15 @@ html {
   border-color: gray;
 }
 
+.method{
+  padding: 2px;
+}
+
 .return{
   background-color: LightGoldenRodYellow;
   padding: 5px;
+}
+
+.anchor{
+  margin-top: 10px;
 }

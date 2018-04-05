@@ -79,8 +79,19 @@
           'token'         : 'le token d\'accès fourni par le provider',
           'token_secret'  : '(facultatif) token secret si fourni par le provider (ex twitter)'}"
         m_return      = "{&quot;access_token&quot;: &quot;TTfDCMod9D8QIEg8nrFFaYsVrNKs51&quot;, &quot;token_type&quot;: &quot;Bearer&quot;, &quot;expires_in&quot;: 3600, &quot;refresh_token&quot;: &quot;j6aLEb74ce51fLWjW2WBgojUnJEuoG&quot;, &quot;scope&quot;: &quot;&quot;}, &quot;error&quot;: &quot;None&quot;">
-
       </step>
+      <hr class="style">
+      <step red lighten-1
+        title       = "Profil"
+        method      = "GET"
+        url_root    = {{url_root}}
+        route       = "me/profil"
+        use         = "Renvoie les informations de l'utilisateur."
+        v-bind:curl_cmd = "{
+          'secret'        : '*secret'}"
+        m_return      = "{&quot;access_token&quot;: &quot;TTfDCMod9D8QIEg8nrFFaYsVrNKs51&quot;, &quot;token_type&quot;: &quot;Bearer&quot;, &quot;expires_in&quot;: 3600, &quot;refresh_token&quot;: &quot;j6aLEb74ce51fLWjW2WBgojUnJEuoG&quot;, &quot;scope&quot;: &quot;&quot;}, &quot;error&quot;: &quot;None&quot;">
+      </step>
+
     </div>
   </div>
 

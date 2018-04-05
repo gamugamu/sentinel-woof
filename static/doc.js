@@ -3,9 +3,9 @@ Vue.component('step', {
   template: `
     <div>
       </br>
-      <h5>{{title}}</h5>
+      <h5>• {{title}}</h5>
       <p><i>{{use}}</i></p>
-      <b class="black white-text">{{method}}</b> {{url_root}}<b class="grey lighten-2">{{route}}</b></route>
+      <b class="grey darken-3 white-text method">{{method}}</b> {{url_root}}<b class="cyan lighten-5">{{route}}</b></route>
       <table class="bordered">
        <thead>
          <tr>
