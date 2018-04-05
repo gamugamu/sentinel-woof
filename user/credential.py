@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from flask_sentinel.data import Storage
 from flask import url_for
-import CredentialValidator as credential
+import utils.CredentialValidator as credential
 import hashlib
 import requests
-import UserHelper
+import utils.UserHelper
 import json
 
 def conversion(data):
