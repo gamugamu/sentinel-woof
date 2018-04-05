@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask_sqlalchemy import SQLAlchemy
 import datetime
 
@@ -13,8 +14,8 @@ def configure(app):
     }
 
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:\
-    %(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
+    print "---> ", 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
     db.init_app(app)
     print "configured"
 #######
@@ -26,13 +27,13 @@ class BaseModel(db.Model):
     __abstract__ = True
 
     def __init__(self, *args):
-        super().__init__(*args)
+        super(BaseModel, self).__init__(*args)
 
     def __repr__(self):
         """Define a base way to print models"""
         return '%s(%s)' % (self.__class__.__name__, {
             column: value
-            for column, value in self._to_dict().items()
+            for column, value in self.__dict__.items()
         })
 
     def json(self):

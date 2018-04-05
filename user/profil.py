@@ -2,6 +2,7 @@
 from flask import Blueprint
 from flask_sentinel import oauth
 from utils import TokenBearer
+from storage.models import db, Station
 
 profil = Blueprint('me_profil', __name__, template_folder='templates')
 
@@ -24,3 +25,12 @@ def me_profil():
     print "info: ", user, str(user._id) #5abcf96104581c4386789968
 
     return "You made it through and accessed the protected resource!"
+
+@profil.route('/me/test')
+def me_test():
+    allStation = Station.query.all()
+    station = Station()
+    print "allStation --> ", allStation
+    db.session.add(station)
+    db.session.commit()
+    return "done--"
