@@ -45,11 +45,11 @@
           <form action="#">
             <center>
               <label>
-                <input v-model="provider" id="google" value="Google" class="with-gap" name="group1" type="radio" checked />
+                <input v-model="provider" id="google" value="google" class="with-gap" name="group1" type="radio" checked />
                 <span class="grey-text text-darken-2">Google</span>
               </label>
               <label class="text-darken-2">
-                <input v-model="provider" id="facebook" value="Facebook" class="with-gap" name="group1" type="radio" checked />
+                <input v-model="provider" id="facebook" value="facebook" class="with-gap" name="group1" type="radio" checked />
                 <span class="grey-text text-darken-2">Facebook</span>
               </label>
             </center>
@@ -65,7 +65,7 @@
         title       = "Authentification"
         method      = "POST"
         url_root    = {{url_root}}
-        route       = "me/authwithcredential"
+        route       = "me/oauth"
         use         = "Permet de récupérer un token d'authentification pour les accès personels woof."
         v-bind:curl_cmd = "{
           'client_id'     : '*client_id',

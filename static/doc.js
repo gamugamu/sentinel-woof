@@ -22,7 +22,7 @@ Vue.component('step', {
        </table>
       <pre><code class="language-bash line-numbers">{{curl_command}}</code></pre>
       <b>Return</b>
-      <div class="grey lighten-2">
+      <div class="return">
         <i><p>{{m_return}}</p></i>
       </div>
     </div>
@@ -39,7 +39,7 @@ Vue.component('step', {
         if ( value.charAt(0) == '*' ) {
           k = value.substr(1, value.lenght);
           v = typeof this.$parent._data[k] !== 'undefined' ? this.$parent._data[k] : ""
-          
+
           cmd += "\"" + key + "\":" + "\"" + v +  "\", "
         }else{
           cmd += "\"" + key + "\":" + "\"" + value +  "\", "

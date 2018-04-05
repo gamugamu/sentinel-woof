@@ -20,7 +20,7 @@ def credentialConversion(data):
         print "---> id",  user_cloud_info["id"]
         user_pass   = hashlib.sha224(user_id).hexdigest()
         # note: _user est privé. Ne pas exposer aux clients.
-        _user       = UserHelper.user_from_credential(user_id, user_pass)
+        _user = UserHelper.user_from_credential(user_id, user_pass)
         r = requests.post(url_for('access_token', _external=True),
                         data = {
                             'client_id' : data["client_id"],

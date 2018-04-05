@@ -7,14 +7,12 @@ from flask_oauthlib.client import OAuth
 def request_user_info_by_token(authlogin, secret = "", provider = ""):
     # Si c'est un compte local (woofwoof) alors il faut vérifier que la clès du compte existe
     # Si la clès n'existe pas, le compte n'existe pas
-    #request_user_info_twitter(credentials)
-    print "PROVIDER", provider
-
-    return {
-        'google'    : request_user_info_google(authlogin),
-        'facebook'  : request_user_info_facebook(authlogin),
-        'twitter'   : "non implemented"
-    }[provider]
+    if provider == 'google':
+        return request_user_info_google(authlogin)
+    elif provider == 'facebook':
+        return request_user_info_facebook(authlogin)
+    else:
+        return 0
 
 def request_user_info_facebook(authlogin):
     http = httplib2.Http()
@@ -66,6 +64,7 @@ def request_user_info_google(authlogin):
     http        = httplib2.Http()
     credentials = AccessTokenCredentials(authlogin, 'user-agent-value')
     credentials.authorize(http)
+    print "FROM GOOGLE"
 
     try:
         resp, content   = http.request('https://www.googleapis.com/plus/v1/people/me')

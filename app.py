@@ -4,8 +4,10 @@ from flask_sentinel import ResourceOwnerPasswordCredentials, oauth
 import SchemaValidator as schema
 import WoofToken_FromCredential as credConvertor
 import json
+from user.profil import profil
 
 app = Flask(__name__)
+app.register_blueprint(profil)
 ResourceOwnerPasswordCredentials(app)
 
 # optionally load settings from py module
