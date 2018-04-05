@@ -9,6 +9,6 @@ profil = Blueprint('me_profil', __name__, template_folder='templates')
 @oauth.require_oauth()
 def me_profil():
     user = TokenBearer.user_from_session()
-    print "info: ", user, str(user._id)
+    print "info: ", user, str(user._id) #5abcf96104581c4386789968
 
     return "You made it through and accessed the protected resource!"
