@@ -9,3 +9,12 @@ docker run --name waf-redis -p 6379:6379 -d redis
 docker pull mongo
 # port mongo par defaut 27017
 docker run --name waf-MongoDB -p 27017:27017 -d mongo
+
+docker pull postgres
+# port 5432
+docker run -d -p 5432:5432 --name waf-postgres -e POSTGRES_PASSWORD=secretpassword postgres
+docker exec -it my-postgres bash
+/# psql -U postgres
+/# CREATE DATABASE woof;
+/# \q;
+en local psql -h localhost -p 5432 -U postgres -W  devrait marcher
