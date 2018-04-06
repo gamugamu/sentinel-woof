@@ -2,16 +2,15 @@
 from flask import Flask, request, render_template
 from flask_sentinel import ResourceOwnerPasswordCredentials, oauth
 import utils.SchemaValidator as schema
-import user.credential as credConvertor
 import json
 from user.profil import profil
-from storage.models import configure as storage_configure
 
 app = Flask(__name__)
+from storage import models
+
 app.register_blueprint(profil)
 ResourceOwnerPasswordCredentials(app)
 app.config['DEBUG'] = True
-storage_configure(app)
 
 @app.route('/')
 def home():
