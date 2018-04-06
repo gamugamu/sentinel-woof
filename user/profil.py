@@ -24,11 +24,11 @@ def userbycredential():
 #@oauth.require_oauth()
 def me_profil():
     from storage.models import PetsOwner, add_n_commit, delete_n_commit, commit
-
-    peto = PetsOwner.query.filter_by(mail='kook').first()
+    import petname
+    peto = PetsOwner.query.filter_by(mail='jiljl').first()
     # TODO, à retirer, Devrait toujours etre evalué a true puisqu' oauth
     if peto is None:
-        peto = PetsOwner(mail='kook')
+        peto = PetsOwner(mail='kook', seed=petname.Generate(2, "-"))
         add_n_commit(peto)
 
     # retourne l'utilisateur actuel.
