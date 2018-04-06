@@ -28,13 +28,58 @@ db = SQLAlchemy(app)
 
 def add_n_commit(object):
     db.session.add(object)
+    #TODO refacto si necessaire
+    db.session.commit()
+
+def delete_n_commit(object):
+    db.session.delete(object)
+    #TODO refacto si necessaire
+    db.session.commit()
+
+def commit():
     db.session.commit()
 
 def to_json(obj):
     print "---> ", jsonify(obj)
     return jsonify(obj)
 
-class PetsOwner(db.Model):
+class OutputMixin(object):
+    RELATIONSHIPS_TO_DICT = False
+
+    def __iter__(self):
+        return self.to_dict().iteritems()
+
+    def to_dict(self, rel=None, backref=None):
+        if rel is None:
+            rel = self.RELATIONSHIPS_TO_DICT
+        res = {column.key: getattr(self, attr)
+               for attr, column in self.__mapper__.c.items()}
+        if rel:
+            for attr, relation in self.__mapper__.relationships.items():
+                # Avoid recursive loop between to tables.
+                if backref == relation.table:
+                    continue
+                value = getattr(self, attr)
+                if value is None:
+                    res[relation.key] = None
+                elif isinstance(value.__class__, DeclarativeMeta):
+                    res[relation.key] = value.to_dict(backref=self.__table__)
+                else:
+                    res[relation.key] = [i.to_dict(backref=self.__table__)
+                                         for i in value]
+        return res
+
+    def to_json(self, rel=None):
+        def extended_encoder(x):
+            if isinstance(x, datetime):
+                return x.isoformat()
+            if isinstance(x, UUID):
+                return str(x)
+        if rel is None:
+            rel = self.RELATIONSHIPS_TO_DICT
+        return json.dumps(self.to_dict(rel), default=extended_encoder)
+
+class PetsOwner(OutputMixin, db.Model):
     __tablename__   = 'petsowner'
     id              = Column(Integer, primary_key=True)
     sentinel_id     = Column(String(40))
@@ -42,7 +87,7 @@ class PetsOwner(db.Model):
     seed            = Column(String(20))
     pets            = relationship("Pet", backref='petowner', cascade="all, delete-orphan")
 
-class Pet(db.Model):
+class Pet(OutputMixin, db.Model):
     __tablename__   = 'pet'
     id              = Column(Integer, primary_key=True)
     name            = Column(String(20))
