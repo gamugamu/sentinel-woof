@@ -4,7 +4,7 @@ from flask import url_for
 import utils.CredentialValidator as credential
 import hashlib
 import requests
-import utils.UserHelper
+from utils import UserHelper
 import json
 
 def conversion(data):
@@ -34,7 +34,10 @@ def conversion(data):
             token = {}
             errorMessage = 'cliend_id is invalid'
         else:
-            #test
+            #Les données sont valides,et on peut en tout sécurité créer
+            # ou récupérer le petsowner (petsowner = user loggé)
+            UserHelper.mirrored_petsOwner(user_id)
+
             T = Storage.get_token(token["access_token"])
             print "info: ", T, T.user, str(T.user._id)
     # bad credential
