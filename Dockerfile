@@ -5,8 +5,8 @@ RUN virtualenv /env
 ENV VIRTUAL_ENV /env
 ENV PATH /env/bin:$PATH
 
-# redis and mongo port
-EXPOSE 6379 27017
+# redis, mongo and postgreport
+EXPOSE 6379 27017 5432
 
 ADD requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt

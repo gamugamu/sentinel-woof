@@ -21,3 +21,14 @@ en local psql -h localhost -p 5432 -U postgres -W  devrait marcher
 -> deja fait python manage.py db init
 python manage.py db migrate
 python manage.py db upgrade
+
+#migration remote:
+## export
+pg_dump -C -h localhost  -U postgres woof | xz > woof-backup.xz
+## copy
+scp -r woof-backup.xz root@wannanosuurus.com:~
+# remote terminal
+docker cp woof-backup.xz waf-postgres:/woof-backup.xz
+
+#Utiliser docker-compose:
+docker-compose -f stack.yml up

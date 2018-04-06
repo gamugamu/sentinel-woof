@@ -30,7 +30,7 @@ def me_profil():
 def me_test():
     allStation = Station.query.all()
     station = Station()
-    print "allStation --> ", allStation
+    print "allStation --> ", allStation, len(allStation)
     db.session.add(station)
     db.session.commit()
-    return "done--"
+    return "done-- " + str(len(allStation)) + "---"

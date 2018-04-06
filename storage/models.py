@@ -1,21 +1,25 @@
 # -*- coding: utf-8 -*-
+from os import environ
 from flask_sqlalchemy import SQLAlchemy
 import datetime
 
 
 def configure(app):
     #TODO deplacer
+    host_name = 'db' if environ.get('NUC') is not None else 'localhost'
+
     POSTGRES = {
         'user': 'postgres',
         'pw': 'secretpassword',
         'db': 'woof',
-        'host': 'localhost',
+        'host': host_name,
         'port': '5432',
     }
 
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
     print "---> ", 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
+
     db.init_app(app)
     print "configured"
 #######
