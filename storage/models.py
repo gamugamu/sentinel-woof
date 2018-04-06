@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 from os import environ
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import *
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import (scoped_session, sessionmaker, relationship,
+                            backref)
 import datetime
 
+Base        = declarative_base()
 
 def configure(app):
-    #TODO deplacer
     host_name = 'db' if environ.get('NUC') is not None else 'localhost'
 
     POSTGRES = {
@@ -15,45 +19,25 @@ def configure(app):
         'host': host_name,
         'port': '5432',
     }
+    postgres_url = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
 
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
-    print "---> ", 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
+    engine      = create_engine(postgres_url, convert_unicode = True)
+    db_session  = scoped_session(sessionmaker(  autocommit  = False,
+                                                autoflush   = False,
+                                                bind        = engine))
+    Base.query  = db_session.query_property()
 
-    db.init_app(app)
-    print "configured"
-#######
+class PetsOwner(Base):
+    __tablename__   = 'petsowner'
+    id              = Column(Integer, primary_key=True)
+    sentinel_id     = Column(Integer)
+    mail            = Column(String(50))
+    seed            = Column(String(20))
+    pets            = relationship("Pet", cascade="all, delete-orphan")
 
-db = SQLAlchemy()
-
-class BaseModel(db.Model):
-    """Base data model for all objects"""
-    __abstract__ = True
-
-    def __init__(self, *args):
-        super(BaseModel, self).__init__(*args)
-
-    def __repr__(self):
-        """Define a base way to print models"""
-        return '%s(%s)' % (self.__class__.__name__, {
-            column: value
-            for column, value in self.__dict__.items()
-        })
-
-    def json(self):
-        """
-                Define a base way to jsonify models, dealing with datetime objects
-        """
-        return {
-            column: value if not isinstance(value, datetime.date) else value.strftime('%Y-%m-%d')
-            for column, value in self._to_dict().items()
-        }
-
-
-class Station(BaseModel, db.Model):
-    """Model for the stations table"""
-    __tablename__ = 'stations'
-
-    id = db.Column(db.Integer, primary_key = True)
-    lat = db.Column(db.Float)
-    lng = db.Column(db.Float)
+class Pet(Base):
+    __tablename__   = 'pet'
+    id              = Column(Integer, primary_key=True)
+    name            = Column(String(20))
+    woof_name       = Column(String(41))
+    parent_id       = Column(Integer, ForeignKey('petsowner.id'))

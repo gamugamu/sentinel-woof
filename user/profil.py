@@ -2,7 +2,6 @@
 from flask import Blueprint
 from flask_sentinel import oauth
 from utils import TokenBearer
-from storage.models import db, Station
 
 profil = Blueprint('me_profil', __name__, template_folder='templates')
 
@@ -21,16 +20,17 @@ def userbycredential():
 @profil.route('/me/profil')
 @oauth.require_oauth()
 def me_profil():
-    user = TokenBearer.user_from_session()
-    print "info: ", user, str(user._id) #5abcf96104581c4386789968
+    # user = TokenBearer.user_from_session()
+    # print "info: ", user, str(user._id) #5abcf96104581c4386789968
 
     return "You made it through and accessed the protected resource!"
 
 @profil.route('/me/test')
 def me_test():
-    allStation = Station.query.all()
-    station = Station()
-    print "allStation --> ", allStation, len(allStation)
-    db.session.add(station)
-    db.session.commit()
-    return "done-- " + str(len(allStation)) + "---"
+    #allStation = Station.query.all()
+    #station = Station()
+    #print "allStation --> ", allStation, len(allStation)
+    #db.session.add(station)
+    #db.session.commit()
+    #return "done-- " + str(len(allStation)) + "---"
+    return "test"
