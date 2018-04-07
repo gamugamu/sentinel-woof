@@ -2,7 +2,6 @@ Vue.component('step', {
   props: ['title', 'method', 'url_root', 'route', 'use', 'curl_cmd', 'data', 'm_return'],
   template: `
     <div>
-      </br>
       <h5>• {{title}}</h5>
       <p><i>{{use}}</i></p>
       <b class="grey darken-3 white-text method">{{method}}</b> {{url_root}}<b class="cyan lighten-5">{{route}}</b></route>

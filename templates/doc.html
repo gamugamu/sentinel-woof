@@ -31,7 +31,6 @@
     <h4>Woof API-services</h4>
     <hr flex/></span>
     <div id="app">
-
       <div class="box">
         <p>Teste directement les services!<p>
         <div class="cyan lighten-5 input-field col s6">
@@ -61,6 +60,7 @@
         </div><!-- forms -->
       </div><!-- box -->
 
+      <h2>/me</h2>
       <step red lighten-1
         title       = "Authentification"
         method      = "POST"
@@ -80,20 +80,76 @@
           'token_secret'  : '(facultatif) token secret si fourni par le provider (ex twitter)'}"
         m_return      = "{&quot;access_token&quot;: &quot;TTfDCMod9D8QIEg8nrFFaYsVrNKs51&quot;, &quot;token_type&quot;: &quot;Bearer&quot;, &quot;expires_in&quot;: 3600, &quot;refresh_token&quot;: &quot;j6aLEb74ce51fLWjW2WBgojUnJEuoG&quot;, &quot;scope&quot;: &quot;&quot;}, &quot;error&quot;: &quot;None&quot;">
       </step>
+
       <hr class="style">
+
       <step red lighten-1
         title       = "Profil"
         method      = "GET"
         url_root    = {{url_root}}
-        route       = "me/profil"
+        route       = "me"
         use         = "Renvoie les informations de l'utilisateur."
         v-bind:curl_cmd = "{
           'secret'        : '*secret'}"
         m_return      = "{&quot;access_token&quot;: &quot;TTfDCMod9D8QIEg8nrFFaYsVrNKs51&quot;, &quot;token_type&quot;: &quot;Bearer&quot;, &quot;expires_in&quot;: 3600, &quot;refresh_token&quot;: &quot;j6aLEb74ce51fLWjW2WBgojUnJEuoG&quot;, &quot;scope&quot;: &quot;&quot;}, &quot;error&quot;: &quot;None&quot;">
       </step>
 
-    </div>
+      <h2>/#woof-name</h2>
+
+    </div><!-- box -->
+    <!-- code erreurs -->
+    <div class="error_box">
+      <table>
+        <thead>
+           <tr>
+               <th><h6 class="right">Error</h6></th>
+               <th><h6 class="left">info<h6></th>
+           </tr>
+         </thead>
+
+         <tbody>
+           <tr>
+             <td><div class="bold">-1</div></td>
+             <td>No op</td>
+           </tr>
+           <tr>
+             <td><div class="bold">0</div></td>
+             <td>Success</td>
+           </tr>
+           <tr>
+             <td><div class="bold">20</div></td>
+             <td>Schema error</td>
+           </tr>
+         </tbody>
+      </table>
+    </div> <!-- error box -->
   </div>
+
+  <footer class="page-footer cyan darken-4">
+      <div class="container">
+        <div class="row">
+          <div class="col l6 s12">
+            <h5 class="white-text">Footer Content</h5>
+            <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
+          </div>
+          <div class="col l4 offset-l2 s12">
+            <h5 class="white-text">Links</h5>
+            <ul>
+              <li><a class="grey-text text-lighten-3" href="#!">Link 1</a></li>
+              <li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
+              <li><a class="grey-text text-lighten-3" href="#!">Link 3</a></li>
+              <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-copyright">
+        <div class="container">
+        © 2018 Copyright Text
+        <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+        </div>
+      </div>
+  </footer>
 
   <script src={{url_for('static', filename='doc.js')}}></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.13.0/prism.js"></script>

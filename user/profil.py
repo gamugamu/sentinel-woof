@@ -10,7 +10,6 @@ profil = Blueprint('me_profil', __name__, template_folder='templates')
 def json_decorate(func):
    def func_wrapper():
        return jsonify(func())
-  # return '{0}'.format(func())
 
    return func_wrapper
 
@@ -50,7 +49,6 @@ def me_profil():
             else:
                 # Blank
                 error.code  = Error_code.MALFSCHE.value
-                print "error", e
                 error.info  = str(e)
                 peto        = PetsOwner()
         else:
