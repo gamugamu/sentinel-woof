@@ -32,3 +32,10 @@ docker cp woof-backup.xz waf-postgres:/woof-backup.xz
 
 #Utiliser docker-compose:
 docker-compose -f stack.yml up
+
+
+
+curl -i -H "Content-Type: application/json" -d '{"mail":"nana@djsl.com"}' -X POST http://127.0.0.1:8000/me/profil 
+curl -i -H "Content-Type: application/json" http://127.0.0.1:8000/me/profil
+curl -i -H "Content-Type: application/json" -d '{"mail":"dsjjl@djsl.com"}' -X PUT http://127.0.0.1:8000/me/profil
+curl -i -H "Content-Type: application/json" -X DELETE http://127.0.0.1:8000/me/profil

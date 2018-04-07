@@ -1,8 +1,8 @@
-from schema import Schema, Regex, Optional
+from schema import Schema, Regex, Optional, Use
 
 def validate_userbycredential(data):
     if not data:
-        return 400, False, 'post is not in json format or empty'
+        return 400, False, 'not in json format or empty'
     try:
         schema = Schema({   'authlogin': basestring,
                             Optional('secret'): basestring,
@@ -14,3 +14,17 @@ def validate_userbycredential(data):
 
     except Exception as e:
         return 400, False, e
+
+def validate_me(data):
+    if not data:
+        return 400, False, 'not in json format or empty'
+    try:
+        schema = Schema({   Optional('mail')    : Regex(r'\w+@\w+'),
+                            Optional('seed')    : basestring,
+                            Optional('name')    : basestring
+                        }, ignore_extra_keys=True)
+
+        return schema.validate(data), None
+
+    except Exception as e:
+        return "{}", e

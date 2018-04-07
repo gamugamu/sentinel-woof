@@ -40,7 +40,6 @@ def commit():
     db.session.commit()
 
 def to_json(obj):
-    print "---> ", jsonify(obj)
     return jsonify(obj)
 
 class OutputMixin(object):
@@ -48,6 +47,18 @@ class OutputMixin(object):
 
     def __iter__(self):
         return self.to_dict().iteritems()
+
+    def sanitized(self):
+        res = self.to_dict()
+        # l'id doit être caché
+        del res['id']
+        res_c = res.copy()
+        for k, v in res.iteritems():
+            # clean propriétés privées
+            if k.startswith("_"):
+                del res_c[k]
+
+        return res_c
 
     def to_dict(self, rel=None, backref=None):
         if rel is None:
@@ -57,11 +68,14 @@ class OutputMixin(object):
         if rel:
             for attr, relation in self.__mapper__.relationships.items():
                 # Avoid recursive loop between to tables.
+                print "*", attr, relation
                 if backref == relation.table:
                     continue
                 value = getattr(self, attr)
                 if value is None:
                     res[relation.key] = None
+                elif relation is "id":
+                    print "found ", id
                 elif isinstance(value.__class__, DeclarativeMeta):
                     res[relation.key] = value.to_dict(backref=self.__table__)
                 else:
@@ -82,8 +96,9 @@ class OutputMixin(object):
 class PetsOwner(OutputMixin, db.Model):
     __tablename__   = 'petsowner'
     id              = Column(Integer, primary_key=True)
-    sentinel_id     = Column(String(40))
+    _sentinel_id    = Column(String(40))
     mail            = Column(String(50))
+    name            = Column(String(50))
     seed            = Column(String(20))
     pets            = relationship("Pet", backref='petowner', cascade="all, delete-orphan")
 
