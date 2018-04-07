@@ -53,16 +53,43 @@ def me_profil():
 def userbycredential():
     from utils import SchemaValidator as schema
     import credential
-    # valide que les clès sont bonnes
-    sanitized, e    = schema.validate_userbycredential(request.json)
-    token           = {}
-    error           = Error()
 
-    if e is None:
-        token, errorMessage = credential.conversion(request.json)
+    #detect si un refresh_token
+    refresh_token = None
+    error         = Error()
+
+    # si c'est un refresh token, on le rafraichit
+    if request.json is not None:
+        refresh_token = request.json.get("refresh_token")
+
+    if refresh_token is not None:
+        print "refresh** token"
+        sanitized, e    = schema.validate_refresh_token(request.json)
+
+        if e is None:
+            token = credential.refresh(sanitized)
+            print "T ", token, type(token)
+            e_str     = token.get("error")
+
+            if e_str is not None:
+                error.code  = Error_code.INVGRANT.value
+                error.info  = e_str
+                token       = {}
+            print "REFRESH result ?", token
+        else:
+            error.code  = Error_code.MALFSCHE.value
+            error.info  = str(e)
+    # c'est une demande de ticket via un provider (google, facebook, twitter)
     else:
-        error.code  = Error_code.MALFSCHE.value
-        error.info  = str(e)
+        # valide que les clès sont bonnes
+        sanitized, e    = schema.validate_userbycredential(request.json)
+        token           = {}
+
+        if e is None:
+            token, errorMessage = credential.conversion(request.json)
+        else:
+            error.code  = Error_code.MALFSCHE.value
+            error.info  = str(e)
 
 
     # retourne le compte

@@ -37,7 +37,6 @@ def conversion(data):
             #Les données sont valides,et on peut en tout sécurité créer
             # ou récupérer le petsowner (petsowner = user loggé)
             T = Storage.get_token(token["access_token"])
-            print "info: ", T, T.user, str(T.user._id)
             sent_id = str(T.user._id)
             # Créer si petowner n'existe pas
             mirrored_petsOwner(sent_id)
@@ -47,3 +46,12 @@ def conversion(data):
         errorMessage = 'credential is invalid'
 
     return token, errorMessage
+
+def refresh(data):
+    r  = requests.post(url_for('access_token', _external=True),
+                data = {
+                    'client_id'         : data["client_id"],
+                    'grant_type'        : 'refresh_token',
+                    'refresh_token'     : data["refresh_token"]})
+    token = json.loads(r.text)
+    return token
