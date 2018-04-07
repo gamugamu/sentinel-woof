@@ -5,6 +5,7 @@ import utils.CredentialValidator as credential
 import hashlib
 import requests
 import json
+from utils.UserHelper import user_from_credential, mirrored_petsOwner
 
 def conversion(data):
     # valide que le credential du provider est bon
@@ -19,7 +20,7 @@ def conversion(data):
         user_pass   = hashlib.sha224(user_id).hexdigest()
 
         # note: _user est privé. Ne pas exposer aux clients.
-        _user   = UserHelper.user_from_credential(user_id, user_pass)
+        _user   = user_from_credential(user_id, user_pass)
         r       = requests.post(url_for('access_token', _external=True),
                         data = {
                             'client_id' : data["client_id"],
@@ -37,6 +38,10 @@ def conversion(data):
             # ou récupérer le petsowner (petsowner = user loggé)
             T = Storage.get_token(token["access_token"])
             print "info: ", T, T.user, str(T.user._id)
+            sent_id = str(T.user._id)
+            # Créer si petowner n'existe pas
+            mirrored_petsOwner(sent_id)
+
     # bad credential
     else:
         errorMessage = 'credential is invalid'

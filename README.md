@@ -35,7 +35,5 @@ docker-compose -f stack.yml up
 
 
 
-curl -i -H "Content-Type: application/json" -d '{"mail":"nana@djsl.com"}' -X POST http://127.0.0.1:8000/me/profil 
-curl -i -H "Content-Type: application/json" http://127.0.0.1:8000/me/profil
-curl -i -H "Content-Type: application/json" -d '{"mail":"dsjjl@djsl.com"}' -X PUT http://127.0.0.1:8000/me/profil
-curl -i -H "Content-Type: application/json" -X DELETE http://127.0.0.1:8000/me/profil
+curl -i -H "Authorization: Bearer NRmbkgxtrV60wQhoqnErd5qdLUSMot" -H "Content-Type: application/json" http://127.0.0.1:8000/me/profil
+curl -k -H "Authorization: Bearer NRmbkgxtrV60wQhoqnErd5qdLUSMot" -H "Content-Type: application/json" -X PUT -d '{"mail":"dsjjl@djsl.com"}' http://127.0.0.1:8000/mecurl -i -H "Content-Type: application/json" -X DELETE http://127.0.0.1:8000/me/profil

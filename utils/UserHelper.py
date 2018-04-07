@@ -15,12 +15,14 @@ def user_from_credential(name, password):
 
 # copy l'utilisateur
 def mirrored_petsOwner(sentinel_id):
+    from storage.models import PetsOwner, add_n_commit, commit
     string_id   = str(sentinel_id)
-    pets_owner  = PetsOwner.query.filter_by(sentinel_id=string_id).first()
+    pets_owner  = PetsOwner.query.filter_by(_sentinel_id=string_id).first()
 
     if not pets_owner:
         #si pas de user, on le crée
-        pets_owner = PetsOwner(sentinel_id=string_id)
+        print "*****CREATE USER"
+        pets_owner = PetsOwner(_sentinel_id=string_id)
         add_n_commit(pets_owner)
 
         return pets_owner
@@ -29,21 +31,11 @@ def mirrored_petsOwner(sentinel_id):
 
 # copy l'utilisateur
 def petsOwner_from_session():
-    from storage.models import PetsOwner, add_n_commit
-    #peto = PetsOwner(mail='kook')
-    peto = PetsOwner.query.filter_by(mail='kook').first()
-    if peto is None:
-        peto = PetsOwner(mail='kook')
-        add_n_commit(peto)
+    from storage.models import PetsOwner, add_n_commit, commit
+    import utils.TokenBearer as Token_Bearer
 
-    print "peto ", peto.mail, peto.id
-    return peto, peto
-    """
-    user, error = TokenBearer.user_from_session()
-    pets_owner  = None
+    user    = Token_Bearer.user_from_session() #@raise
+    sent_id = str(user._id)
+    peto    = PetsOwner.query.filter_by(_sentinel_id=sent_id).first()
 
-    if error is None:
-        pets_owner  = PetsOwner.query.filter_by(sentinel_id=str(user._id)).first()
-
-    return pets_owner, error
-    """
+    return peto

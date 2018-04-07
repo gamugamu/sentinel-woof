@@ -9,18 +9,16 @@ def validate_userbycredential(data):
                             'client_id' : basestring,
                             'provider':  Regex(r'(google|facebook|twitter|woofwoof)')
                         })
-        isValid = schema.validate(data)
-        return  200 if isValid else 400, isValid, None
+        return schema.validate(data), None
 
     except Exception as e:
-        return 400, False, e
+        return "{}", e
 
 def validate_me(data):
     if not data:
-        return 400, False, 'not in json format or empty'
+        return "{}", 'not in json format or empty'
     try:
         schema = Schema({   Optional('mail')    : Regex(r'\w+@\w+'),
-                            Optional('seed')    : basestring,
                             Optional('name')    : basestring
                         }, ignore_extra_keys=True)
 

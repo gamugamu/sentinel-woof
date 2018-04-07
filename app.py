@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 from flask_sentinel import ResourceOwnerPasswordCredentials, oauth
 import utils.SchemaValidator as schema
 import json
 from user.profil import profil
 from werkzeug.routing import BaseConverter
+from utils.TokenBearer import InvalidUsage
 
 app = Flask(__name__)
 
@@ -21,6 +22,12 @@ app.register_blueprint(profil)
 
 ResourceOwnerPasswordCredentials(app)
 app.config['DEBUG'] = True
+
+@app.errorhandler(InvalidUsage)
+def handle_invalid_usage(error):
+    response                = jsonify(error.to_dict())
+    response.status_code    = error.status_code
+    return response
 
 @app.route('/<regex("[a-z]{4,10}"):seed>-<slug>/<regex("[a-z, 0-9]{2,20}"):woof>')
 def example(seed, slug, woof):
