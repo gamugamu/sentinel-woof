@@ -1,20 +1,47 @@
 # Use postgres/example user/password credentials
-version: '0.1'
+version: '2'
 
 services:
 
   db:
     image: postgres
     restart: always
+    container_name: "waf-postgres"
+
     environment:
       POSTGRES_PASSWORD: secretpassword
 
-  adminer:
-    image: cryptodraco/sentinel-dev:v0.0.5
+  mongodb:
+    image: mongo
+    container_name: "waf-mongo"
+
     restart: always
+    ports:
+      - 27017:27017
+
+  redisdb:
+    image: redis
+    container_name: "waf-redis"
+
+    restart: always
+    ports:
+      - 6379:6379
+
+
+  woofapi:
+    image: cryptodraco/sentinel-dev:v0.0.6
+    container_name: "waf-api"
+    restart: always
+    #networks:
+    #  local:
+    #    aliases:
+    #      - woofapi
     environment:
       - NUC=1 #environement de dev
+      - EXTERNAL_URL=https://woof.wannanosuurus.com
     links:
       - db
+      - mongodb
+      - redisdb
     ports:
-      - 5000:8080
+      - 5002:8080

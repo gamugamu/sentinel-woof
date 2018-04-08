@@ -77,4 +77,5 @@ def request_user_info_google(authlogin):
         return resp.status, profil
     # mauvais token
     except Exception as e:
+        print "exc ", e
         return 400, e

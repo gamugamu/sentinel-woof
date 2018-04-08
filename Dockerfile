@@ -13,4 +13,4 @@ RUN pip install -r /app/requirements.txt
 
 ADD . /app
 
-CMD gunicorn -w 2 -b :$PORT app:app
+CMD gunicorn -w 4 -b :$PORT app:app

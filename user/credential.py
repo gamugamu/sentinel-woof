@@ -6,6 +6,7 @@ import hashlib
 import requests
 import json
 from utils.UserHelper import user_from_credential, mirrored_petsOwner
+from os import environ
 
 def conversion(data):
     # valide que le credential du provider est bon
@@ -22,19 +23,25 @@ def conversion(data):
 
         # note: _user est privé. Ne pas exposer aux clients.
         _user   = user_from_credential(user_id, user_pass)
-        r       = requests.post(url_for('access_token', _external=True),
+        print "http://woofapi" + url_for('access_token'), url_for('access_token', _external=True)
+        external_url    = environ.get('EXTERNAL_URL')
+        url             = (external_url + url_for('access_token')) if external_url is not None else url_for('access_token', _external=True)
+        print "true url: ", url
+        r       = requests.post(url,
                         data = {
                             'client_id' : data["client_id"],
                             'grant_type': 'password',
                             'username'  : user_id,
                             'password'  : user_pass})
 
+        print "result? ", r.text
         token = json.loads(r.text)
         # le client peut être invalide.
         if "error" in token:
             token = {}
             errorMessage = 'cliend_id is invalid'
         else:
+            print "found token ?", token
             #Les données sont valides,et on peut en tout sécurité créer
             # ou récupérer le petsowner (petsowner = user loggé)
             T           = Storage.get_token(token["access_token"])

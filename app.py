@@ -6,7 +6,10 @@ from utils.TokenBearer import InvalidUsage
 from pet.route_woof import route
 
 app = Flask(__name__)
-
+app.config['DEBUG'] = True
+#app.config['SENTINEL_MONGO_HOST'] = "mongodb://kaka"
+app.config['SENTINEL_MONGO_URI'] = "mongodb://mongodb"
+app.config['SENTINEL_REDIS_URL'] = "redis://redisdb:6379/0"
 from storage import models
 
 route(app)
@@ -14,7 +17,7 @@ route(app)
 app.register_blueprint(route_me)
 
 ResourceOwnerPasswordCredentials(app)
-app.config['DEBUG'] = True
+
 
 @app.errorhandler(InvalidUsage)
 def handle_invalid_usage(error):

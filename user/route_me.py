@@ -20,7 +20,7 @@ def me_oauth():
     #detect si un refresh_token
     refresh_token = None
     error         = Error()
-
+    print "Send? ", request.json
     # si c'est un refresh token, on le rafraichit
     if request.json is not None:
         refresh_token = request.json.get("refresh_token")
@@ -47,8 +47,9 @@ def me_oauth():
         # valide que les clès sont bonnes
         sanitized, e    = schema.validate_userbycredential(request.json)
         token           = {}
-
+        print "result ? ", request.json
         if e is None:
+            print "will convert ?"
             token, errorMessage = credential.conversion(request.json)
         else:
             error.code  = Error_code.MALFSCHE
