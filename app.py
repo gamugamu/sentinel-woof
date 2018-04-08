@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_sentinel import ResourceOwnerPasswordCredentials
 from user.route_me import route_me
 from utils.TokenBearer import InvalidUsage
