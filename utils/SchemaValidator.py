@@ -38,3 +38,15 @@ def validate_me(data):
 
     except Exception as e:
         return "{}", e
+
+def validate_pets(data):
+    if not data:
+        return "{}", 'not in json format or empty'
+    try:
+        schema = Schema({   'name' : basestring,
+                        }, ignore_extra_keys=True)
+
+        return schema.validate(data), None
+
+    except Exception as e:
+        return "{}", e

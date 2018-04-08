@@ -34,6 +34,7 @@ docker cp woof-backup.xz waf-postgres:/woof-backup.xz
 docker-compose -f stack.yml up
 
 
+fT2QWJDryyivdHKKSrpnrewslMqroY
 curl -i -H "Authorization: Bearer 2mSaNSBmNBUYgRImGKraCDei5t89gC" -H "Content-Type: application/json" http://127.0.0.1:8000/me
 curl -k -H "Authorization: Bearer NRmbkgxtrV60wQhoqnErd5qdLUSMot" -H "Content-Type: application/json" -X PUT -d '{"mail":"dsjjl@djsl.com"}' http://127.0.0.1:8000/me
 curl -i -H "Content-Type: application/json" -X DELETE http://127.0.0.1:8000/me

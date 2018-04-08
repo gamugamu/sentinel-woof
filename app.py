@@ -3,7 +3,7 @@ from flask import Flask, request, render_template, jsonify
 from flask_sentinel import ResourceOwnerPasswordCredentials, oauth
 import utils.SchemaValidator as schema
 import json
-from user.profil import profil
+from user.route_me import route_me
 from werkzeug.routing import BaseConverter
 from utils.TokenBearer import InvalidUsage
 
@@ -18,7 +18,7 @@ class RegexConverter(BaseConverter):
 
 app.url_map.converters['regex'] = RegexConverter
 
-app.register_blueprint(profil)
+app.register_blueprint(route_me)
 
 ResourceOwnerPasswordCredentials(app)
 app.config['DEBUG'] = True
@@ -36,7 +36,6 @@ def example(seed, slug, woof):
 @app.route('/')
 def home():
     return render_template('doc.html', url_root=request.url_root)
-
 
 if __name__ == '__main__':
     app.run(ssl_context='adhoc')

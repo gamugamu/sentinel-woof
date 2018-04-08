@@ -42,6 +42,23 @@ def commit():
 def to_json(obj):
     return jsonify(obj)
 
+def sanitized_collection(list):
+    sanitized = []
+
+    for o in list:
+        res = o.to_dict()
+        del res['id']
+        res_c = res.copy()
+
+        for k, v in res.iteritems():
+            # clean propriétés privées
+            if k.startswith("_"):
+                del res_c[k]
+
+        sanitized.append(res_c)
+
+    return sanitized
+
 class OutputMixin(object):
     RELATIONSHIPS_TO_DICT = False
 
@@ -108,4 +125,4 @@ class Pet(OutputMixin, db.Model):
     id              = Column(Integer, primary_key=True)
     name            = Column(String(20))
     woof_name       = Column(String(41))
-    petowner_id     = db.Column(db.Integer, db.ForeignKey('petsowner.id'))
+    _petowner_id    = db.Column(db.Integer, db.ForeignKey('petsowner.id'))
