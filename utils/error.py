@@ -6,6 +6,7 @@ class Error_code(Enum):
     SUCCESS     = 0
     INVGRANT    = 10
     USERNOTFD   = 20
+    PETNOTFD    = 25
     MALFSCHE    = 50
     PETNAMEEX   = 110
     PETMAXLIM   = 111

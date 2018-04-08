@@ -37,3 +37,7 @@ def put_from_sanitized(dict, pet, peto, error):
         pet.woof_name = os.path.join(peto.seed, pet.name)
 
     return error
+
+def query_from_woof_name(woof_name):
+    from storage.models import Pet
+    return Pet.query.filter_by(woof_name=woof_name).first()

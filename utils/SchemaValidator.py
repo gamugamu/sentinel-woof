@@ -39,7 +39,7 @@ def validate_me(data):
     except Exception as e:
         return "{}", e
 
-def validate_pets(data):
+def validate_pet(data):
     if not data:
         return "{}", 'not in json format or empty'
     try:

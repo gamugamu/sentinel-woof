@@ -92,6 +92,7 @@ def me_profil():
 
 # Les animaux du petowner. Post pour rajouter.
 @route_me.route('/me/pets', methods=['POST', 'GET'])
+@oauth.require_oauth()
 def me_pets():
     from storage.models import PetsOwner, sanitized_collection, commit
     from utils.PetsHelper import new_pet, put_from_sanitized
@@ -105,7 +106,7 @@ def me_pets():
     # • Modifie l'utilisateur.
     elif request.method == 'POST':
         data            = request.get_json()
-        sanitized, e    = schema.validate_pets(data)
+        sanitized, e    = schema.validate_pet(data)
         print "e ", e
         if e is None:
             pet, error = new_pet(peto, error)
