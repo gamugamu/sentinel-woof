@@ -97,6 +97,7 @@ class PetsOwner(OutputMixin, db.Model):
     __tablename__   = 'petsowner'
     id              = Column(Integer, primary_key=True)
     _sentinel_id    = Column(String(40))
+    _provider_id    = Column(String(100)) # peut être nécessaire. Garanti d'être unique et pérènne.
     mail            = Column(String(50))
     name            = Column(String(50))
     seed            = Column(String(20))

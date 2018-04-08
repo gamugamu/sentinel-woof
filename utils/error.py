@@ -5,6 +5,7 @@ class Error_code(Enum):
     NO_OP       = -1
     SUCCESS     = 0
     INVGRANT    = 10
+    USERNOTFD   = 20
     MALFSCHE    = 50
 
 class Error:

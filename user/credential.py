@@ -9,8 +9,9 @@ from utils.UserHelper import user_from_credential, mirrored_petsOwner
 
 def conversion(data):
     # valide que le credential du provider est bon
+    provider        = data.get("provider")
     code, user_cloud_info = credential.request_user_info_by_token(
-        data.get("authlogin"), data.get("secret"), data.get("provider"))
+        data.get("authlogin"), data.get("secret"), provider)
     token           = {}
     errorMessage    = ""
 
@@ -36,10 +37,12 @@ def conversion(data):
         else:
             #Les données sont valides,et on peut en tout sécurité créer
             # ou récupérer le petsowner (petsowner = user loggé)
-            T = Storage.get_token(token["access_token"])
-            sent_id = str(T.user._id)
+            T           = Storage.get_token(token["access_token"])
+            sent_id     = str(T.user._id)
+            # garanti d'être unique. Si le sent_id ne fait pas son taf.
+            provider_id = provider + str(user_id)
             # Créer si petowner n'existe pas
-            mirrored_petsOwner(sent_id)
+            mirrored_petsOwner(sent_id, provider_id)
 
     # bad credential
     else:

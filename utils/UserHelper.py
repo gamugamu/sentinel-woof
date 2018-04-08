@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask_sentinel.data import Storage
+from utils.error import Error, Error_code
+
 #from utils import TokenBearer
 
 # renvoie un compte quoi qu'il arrive. Si le compte n'existe pas en crée un.
@@ -14,20 +16,24 @@ def user_from_credential(name, password):
         return user
 
 # copy l'utilisateur
-def mirrored_petsOwner(sentinel_id):
+def mirrored_petsOwner(sentinel_id, provider_id):
     from storage.models import PetsOwner, add_n_commit, commit
+    import petname
     string_id   = str(sentinel_id)
     pets_owner  = PetsOwner.query.filter_by(_sentinel_id=string_id).first()
 
     if not pets_owner:
         #si pas de user, on le crée
-        print "*****CREATE USER"
-        pets_owner = PetsOwner(_sentinel_id=string_id)
+        pets_owner = PetsOwner(_sentinel_id=string_id, _provider_id=provider_id, seed=petname.Generate(2, "-"))
         add_n_commit(pets_owner)
 
         return pets_owner
     else:
         return pets_owner
+
+class Pet_Dummy(object):
+    def sanitized(self):
+        return {"info" : "I'm a dummy object. I do nothing. I am useless."}
 
 # copy l'utilisateur
 def petsOwner_from_session():
@@ -38,4 +44,10 @@ def petsOwner_from_session():
     sent_id = str(user._id)
     peto    = PetsOwner.query.filter_by(_sentinel_id=sent_id).first()
 
-    return peto
+    error   = Error()
+    if peto is None:
+        peto = Pet_Dummy()
+        error.code  = Error_code.USERNOTFD.value
+        error.info  = "User not found. Did you delete it? (-X DELETE /me). You need to relogin again with a provider token (/me/oauth) and a new user will be recreated"
+
+    return peto, error

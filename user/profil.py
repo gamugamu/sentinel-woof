@@ -20,8 +20,7 @@ def put_sanitized(dict, sql):
 @oauth.require_oauth()
 def me_profil():
     from storage.models import PetsOwner, add_n_commit, delete_n_commit, commit
-    peto    = petsOwner_from_session()
-    error   = Error()
+    peto, error = petsOwner_from_session()
 
     # • Retourne l'utilisateur actuel.
     if request.method == 'GET':
@@ -63,22 +62,22 @@ def userbycredential():
         refresh_token = request.json.get("refresh_token")
 
     if refresh_token is not None:
-        print "refresh** token"
-        sanitized, e    = schema.validate_refresh_token(request.json)
+        sanitized, e = schema.validate_refresh_token(request.json)
 
         if e is None:
-            token = credential.refresh(sanitized)
-            print "T ", token, type(token)
-            e_str     = token.get("error")
+            token   = credential.refresh(sanitized)
+            e_str   = token.get("error")
 
             if e_str is not None:
+                # mauvais token
                 error.code  = Error_code.INVGRANT.value
                 error.info  = e_str
                 token       = {}
-            print "REFRESH result ?", token
         else:
+            # mauvais schema
             error.code  = Error_code.MALFSCHE.value
             error.info  = str(e)
+            
     # c'est une demande de ticket via un provider (google, facebook, twitter)
     else:
         # valide que les clès sont bonnes
