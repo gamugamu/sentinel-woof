@@ -26,12 +26,14 @@ def me_oauth():
         refresh_token = request.json.get("refresh_token")
 
     if refresh_token is not None:
+        print "refresh_token"
         sanitized, e = schema.validate_refresh_token(request.json)
+        print "sanitized", sanitized
 
         if e is None:
             token   = credential.refresh(sanitized)
             e_str   = token.get("error")
-
+            print "TOKEN ", token, e_str
             if e_str is not None:
                 # mauvais token
                 error.code  = Error_code.INVGRANT
@@ -55,7 +57,7 @@ def me_oauth():
             error.code  = Error_code.MALFSCHE
             error.info  = str(e)
 
-
+        print "result ?", token
     # retourne le compte
     return jsonify({"error" : error.to_dict(), "oauth" : token})
 

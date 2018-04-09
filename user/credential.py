@@ -8,6 +8,12 @@ import json
 from utils.UserHelper import user_from_credential, mirrored_petsOwner
 from os import environ
 
+def internal_url(uri):
+    external_url  = environ.get('INTERNAL_URL')
+    url           = (external_url + uri) if external_url is not None else url_for('access_token', _external=True)
+    print "**** url made?", url
+    return url
+
 def conversion(data):
     # valide que le credential du provider est bon
     provider        = data.get("provider")
@@ -23,11 +29,7 @@ def conversion(data):
 
         # note: _user est privé. Ne pas exposer aux clients.
         _user   = user_from_credential(user_id, user_pass)
-        print "http://woofapi" + url_for('access_token'), url_for('access_token', _external=True)
-        external_url    = environ.get('EXTERNAL_URL')
-        url             = (external_url + url_for('access_token')) if external_url is not None else url_for('access_token', _external=True)
-        print "true url: ", url
-        r       = requests.post(url,
+        r       = requests.post(internal_url(url_for('access_token')),
                         data = {
                             'client_id' : data["client_id"],
                             'grant_type': 'password',
@@ -58,10 +60,12 @@ def conversion(data):
     return token, errorMessage
 
 def refresh(data):
-    r  = requests.post(url_for('access_token', _external=True),
+    print "refresh ", internal_url(url_for('access_token'))
+    r  = requests.post(internal_url(url_for('access_token')),
                 data = {
                     'client_id'         : data["client_id"],
                     'grant_type'        : 'refresh_token',
                     'refresh_token'     : data["refresh_token"]})
+    print "loaded "
     token = json.loads(r.text)
     return token

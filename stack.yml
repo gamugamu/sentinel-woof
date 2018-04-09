@@ -31,6 +31,8 @@ services:
   woofapi:
     image: cryptodraco/sentinel-dev:v0.0.6
     container_name: "waf-api"
+    hostname: woofapi
+
     restart: always
     #networks:
     #  local:
@@ -38,7 +40,7 @@ services:
     #      - woofapi
     environment:
       - NUC=1 #environement de dev
-      - EXTERNAL_URL=https://woof.wannanosuurus.com
+      - INTERNAL_URL=http://woofapi:8080 #doit mapper hostname + port externe
     links:
       - db
       - mongodb
