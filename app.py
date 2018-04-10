@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for
 from flask_sentinel import ResourceOwnerPasswordCredentials
 from user.route_me import route_me
 from utils.TokenBearer import InvalidUsage
 from pet.route_woof import route
+from werkzeug.wsgi import get_host
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -13,7 +14,6 @@ app.config['SENTINEL_REDIS_URL'] = "redis://redisdb:6379/0"
 from storage import models
 
 route(app)
-
 app.register_blueprint(route_me)
 
 ResourceOwnerPasswordCredentials(app)
@@ -27,7 +27,7 @@ def handle_invalid_usage(error):
 
 @app.route('/')
 def home():
-    return render_template('doc.html', url_root=request.url_root)
+    return render_template('doc.html', url_root= url_for('home', _external=True))
 
 if __name__ == '__main__':
     app.run(ssl_context='adhoc')

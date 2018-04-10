@@ -67,7 +67,7 @@
         url_root    = {{url_root}}
         route       = "me/oauth"
         use         = "Permet de récupérer un token d'authentification pour les accès personels woof."
-        v-bind:curl_cmd = "{
+        v-bind:curl_cmd   = "{
           'client_id'     : '*client_id',
           'provider'      : '*provider',
           'authlogin'     : '*auth_login',
@@ -78,20 +78,47 @@
           'provider'      : 'le compte sur lequel se logger: google, yahoo, twitter, woof',
           'token'         : 'le token d\'accès fourni par le provider',
           'token_secret'  : '(facultatif) token secret si fourni par le provider (ex twitter)'}"
-        m_return      = "{&quot;access_token&quot;: &quot;TTfDCMod9D8QIEg8nrFFaYsVrNKs51&quot;, &quot;token_type&quot;: &quot;Bearer&quot;, &quot;expires_in&quot;: 3600, &quot;refresh_token&quot;: &quot;j6aLEb74ce51fLWjW2WBgojUnJEuoG&quot;, &quot;scope&quot;: &quot;&quot;}, &quot;error&quot;: &quot;None&quot;">
+          m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;oauth&quot;: { &quot;access_token&quot;: &quot;O9wIOVAXivMIJRDWOCSq2NR8079SAV&quot;, &quot;expires_in&quot;: 3600, &quot;refresh_token&quot;: &quot;2BQQjQR5DNurARHrtXAHLnpFvLgWcs&quot;, &quot;scope&quot;: &quot;&quot;, &quot;token_type&quot;: &quot;Bearer&quot; } }">
       </step>
 
       <hr class="style">
 
       <step red lighten-1
-        title       = "Profil"
-        method      = "GET"
-        url_root    = {{url_root}}
-        route       = "me"
-        use         = "Renvoie les informations de l'utilisateur."
+        title             = "Profil User"
+        method            = "GET"
+        url_root          = {{url_root}}
+        route             = "me"
+        required_bearer   = "true"
+        use               = "Renvoie les informations de l'utilisateur."
+        return_id         = "return_id"
+        m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;me&quot;: { &quot;mail&quot;: null, &quot;name&quot;: null, &quot;seed&quot;: &quot;causal-locust&quot; } }">
+      </step>
+
+      <step red lighten-1
+        title           = ""
+        method          = "PUT"
+        url_root        = {{url_root}}
+        route           = "me"
+        required_bearer = "true"
+        use             = "Modifie les informations de l'utilisateur."
+
         v-bind:curl_cmd = "{
-          'secret'        : '*secret'}"
-        m_return      = "{&quot;access_token&quot;: &quot;TTfDCMod9D8QIEg8nrFFaYsVrNKs51&quot;, &quot;token_type&quot;: &quot;Bearer&quot;, &quot;expires_in&quot;: 3600, &quot;refresh_token&quot;: &quot;j6aLEb74ce51fLWjW2WBgojUnJEuoG&quot;, &quot;scope&quot;: &quot;&quot;}, &quot;error&quot;: &quot;None&quot;">
+          'name'   : 'your_name',
+          'mail'   : 'your_mail@gmail.com'}"
+        v-bind:data = "{
+          'name'   : 'Le nom de l\'utilisateur',
+          'mail'   : 'Le mail de l\'utilisateur'}"
+        m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;me&quot;: { &quot;mail&quot;:&quot;your_mail@gmail.com&quot;, &quot;name&quot;: &quot;your_name&quot;, &quot;seed&quot;: &quot;causal-locust&quot; } }">
+      </step>
+
+      <step red lighten-1
+        title             = ""
+        method            = "DELETE"
+        url_root          = {{url_root}}
+        route             = "me"
+        required_bearer   = "true"
+        use               = "Supprime l'utilisateur. Nécessite de se reloger pour avoir une nouvelle session"
+        m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;me&quot;: { } }">
       </step>
 
       <h2>/#woof-name</h2>

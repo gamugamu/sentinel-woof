@@ -18,10 +18,10 @@ html {
 }
 
 hr.style {
-  margin-top: 20px;
+  margin-top: 40px;
 	border-top: 1px dotted #8c8b8b;
 	border-bottom: 1px dotted #fff;
-  margin-bottom: -10px;
+  margin-bottom: 0px;
 }
 
 .logo{
@@ -58,8 +58,14 @@ hr.style {
 }
 
 .return{
-  background-color: LightGoldenRodYellow;
-  padding: 5px;
+  background-color: OldLace ;
+}
+
+pre {
+    background-color: orange;
+    padding-top: 0;
+    padding-bottom: -100;
+    padding-left: 20px;
 }
 
 .anchor{

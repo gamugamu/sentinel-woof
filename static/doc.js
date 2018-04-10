@@ -1,11 +1,12 @@
 Vue.component('step', {
-  props: ['title', 'method', 'url_root', 'route', 'use', 'curl_cmd', 'data', 'm_return'],
+  props: ['title', 'method', 'url_root', 'route', 'required_bearer', 'use', 'curl_cmd', 'data', 'm_return', 'return_id'],
   template: `
     <div>
-      <h5>• {{title}}</h5>
+      <h5 v-if="title">• {{title}}</h5>
+      <h5 v-else></br></h5>
+      <b class="orange darken-3 white-text method">{{method}}</b> {{url_root}}<b class="cyan lighten-5">{{route}}</b></route>
       <p><i>{{use}}</i></p>
-      <b class="grey darken-3 white-text method">{{method}}</b> {{url_root}}<b class="cyan lighten-5">{{route}}</b></route>
-      <table class="bordered">
+      <table class="bordered" v-if="this.data != undefined">
        <thead>
          <tr>
              <th><i>key</i></th>
@@ -21,31 +22,47 @@ Vue.component('step', {
        </table>
       <pre><code class="language-bash line-numbers">{{curl_command}}</code></pre>
       <b>Return</b>
-      <div class="return">
-        <i><p>{{m_return}}</p></i>
-      </div>
+          <pre class="return margin_tight">
+            {{json_return}}
+          </pre>
     </div>
   `,computed: {
     // un accesseur (getter) calculé
     curl_command: function () {
       // `this` pointe sur l'instance vm
-      var cmd = "curl -i -H \"Content-Type: application/json\" -X " + this.method + " -d '{";
-
-      for(var key in this.curl_cmd){
-        console.log("---> ", key, this.$parent._data[key]);
-        var value = this.curl_cmd[key]
-
-        if ( value.charAt(0) == '*' ) {
-          k = value.substr(1, value.lenght);
-          v = typeof this.$parent._data[k] !== 'undefined' ? this.$parent._data[k] : ""
-
-          cmd += "\"" + key + "\":" + "\"" + v +  "\", "
-        }else{
-          cmd += "\"" + key + "\":" + "\"" + value +  "\", "
-        }
+      var cmd = "curl -i -H \"Content-Type: application/json\" "
+      if (this.required_bearer == "true"){
+          cmd += '-i -H "Authorization: Bearer XXXX_TOKEN_XXXX "'
       }
-      cmd = cmd.slice(0, -2); // ', '
-      cmd += "}' " + this.url_root + this.route;
+
+      if (this.curl_cmd != undefined){
+        cmd += "-X " + this.method + " -d '{"
+
+        for(var key in this.curl_cmd){
+          var value = this.curl_cmd[key]
+
+          if ( value.charAt(0) == '*' ) {
+            k = value.substr(1, value.lenght);
+            v = typeof this.$parent._data[k] !== 'undefined' ? this.$parent._data[k] : ""
+
+            cmd += "\"" + key + "\":" + "\"" + v +  "\", "
+          }else{
+            cmd += "\"" + key + "\":" + "\"" + value +  "\", "
+          }
+        }
+        cmd = cmd.slice(0, -2); // ', '
+        cmd += "}' "
+      }
+      //var obj                   = JSON.parse(this.m_return);
+      //ciResponseText.innerHTML  = JSON.stringify(obj, undefined, 2);
+      var obj = JSON.parse(this.m_return);
+      obj     = JSON.stringify(obj, undefined, 2);
+      console.log(obj);
+      this.json_return = "\n" + obj
+    //  console.log("stringyfied ---> ", obj);
+
+      cmd += this.url_root + this.route;
+
       return cmd
     }
   }
@@ -67,7 +84,6 @@ var app = new Vue({
           sessionStorage.setItem("provider", val)
         },
         'auth_login': function(val, oldVal){
-          console.log("****");
           sessionStorage.setItem("auth_login", val)
         }
     }

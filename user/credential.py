@@ -52,7 +52,8 @@ def conversion(data):
             provider_id = provider + str(user_id)
             # Créer si petowner n'existe pas
             mirrored_petsOwner(sent_id, provider_id)
-
+            #TODO: gestion du scope
+            token["scope"] = "user:mutable"
     # bad credential
     else:
         errorMessage = 'credential is invalid'

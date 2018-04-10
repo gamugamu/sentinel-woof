@@ -26,9 +26,7 @@ def me_oauth():
         refresh_token = request.json.get("refresh_token")
 
     if refresh_token is not None:
-        print "refresh_token"
         sanitized, e = schema.validate_refresh_token(request.json)
-        print "sanitized", sanitized
 
         if e is None:
             token   = credential.refresh(sanitized)
