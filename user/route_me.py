@@ -92,7 +92,8 @@ def me_profil():
     return jsonify({"error" : error.to_dict(), "me" : peto.sanitized()})
 
 # Les animaux du petowner. Post pour rajouter.
-@route_me.route('/me/pets', methods=['POST', 'GET'])
+#TODO deplacer
+@route_me.route('/pets', methods=['POST', 'GET'])
 @oauth.require_oauth()
 def me_pets():
     from storage.models import PetsOwner, sanitized_collection, commit

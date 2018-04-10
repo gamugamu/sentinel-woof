@@ -80,9 +80,7 @@
           'token_secret'  : '(facultatif) token secret si fourni par le provider (ex twitter)'}"
           m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;oauth&quot;: { &quot;access_token&quot;: &quot;O9wIOVAXivMIJRDWOCSq2NR8079SAV&quot;, &quot;expires_in&quot;: 3600, &quot;refresh_token&quot;: &quot;2BQQjQR5DNurARHrtXAHLnpFvLgWcs&quot;, &quot;scope&quot;: &quot;&quot;, &quot;token_type&quot;: &quot;Bearer&quot; } }">
       </step>
-
       <hr class="style">
-
       <step red lighten-1
         title             = "Profil User"
         method            = "GET"
@@ -93,7 +91,6 @@
         return_id         = "return_id"
         m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;me&quot;: { &quot;mail&quot;: null, &quot;name&quot;: null, &quot;seed&quot;: &quot;causal-locust&quot; } }">
       </step>
-
       <step red lighten-1
         title           = ""
         method          = "PUT"
@@ -110,7 +107,6 @@
           'mail'   : 'Le mail de l\'utilisateur'}"
         m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;me&quot;: { &quot;mail&quot;:&quot;your_mail@gmail.com&quot;, &quot;name&quot;: &quot;your_name&quot;, &quot;seed&quot;: &quot;causal-locust&quot; } }">
       </step>
-
       <step red lighten-1
         title             = ""
         method            = "DELETE"
@@ -121,7 +117,46 @@
         m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;me&quot;: { } }">
       </step>
 
-      <h2>/#woof-name</h2>
+      <h2>/Pets</h2>
+      <step red lighten-1
+        title             = "Pets"
+        method            = "GET"
+        url_root          = {{url_root}}
+        route             = "pets"
+        required_bearer   = "true"
+        use               = "Retourne la liste des animaux de l'utilisateur"
+        m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;me&quot;: { } }">
+      </step>
+      <step red lighten-1
+        title             = ""
+        method            = "POST"
+        url_root          = {{url_root}}
+        route             = "pets"
+        required_bearer   = "true"
+        use               = "Rajoute un pet."
+        m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;me&quot;: { } }">
+      </step>
+      <h2>/pet</h2>
+      <step red lighten-1
+        title             = "pet"
+        method            = "GET"
+        url_root          = {{url_root}}
+        route             = "pet/<pet_name>"
+        required_bearer   = "true"
+        use               = "Retourne un pet en particulier."
+        m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;me&quot;: { } }">
+      </step>
+      <step red lighten-1
+        title             = "   "
+        method            = "PUT"
+        url_root          = {{url_root}}
+        route             = "pet/<pet_name>"
+        required_bearer   = "true"
+        use               = "Modifie un pet."
+        m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;me&quot;: { } }">
+      </step>
+
+        <h2>/#woof-name</h2>
 
     </div><!-- box -->
     <!-- code erreurs -->

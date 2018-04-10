@@ -4,7 +4,6 @@ from flask_sentinel import ResourceOwnerPasswordCredentials
 from user.route_me import route_me
 from utils.TokenBearer import InvalidUsage
 from pet.route_woof import route
-from werkzeug.wsgi import get_host
 
 app = Flask(__name__)
 app.config['DEBUG'] = True

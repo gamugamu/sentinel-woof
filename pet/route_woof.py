@@ -34,9 +34,9 @@ def route_woof_get(seed, _seed, woof):
 
     return jsonify({"error" : error.to_dict(), "woof" : pet.sanitized()})
 
-@route_woof.route('/<regex("[a-z]{2,10}"):seed>-<_seed>/<regex("[a-z, 0-9]{2,20}"):woof>', methods=['PUT'])
+@route_woof.route('/pets/<pet_name>', methods=['PUT'])
 @oauth.require_oauth()
-def route_woof_put(seed, _seed, woof):
+def route_woof_put(pet_name):
     from utils.PetsHelper import query_from_woof_name, put_from_sanitized
     from utils.UserHelper import petsOwner_from_session
     from storage.models import Pet, commit
@@ -45,7 +45,7 @@ def route_woof_put(seed, _seed, woof):
     #TODO refactor
     peto, error = petsOwner_from_session()
     woof_name   = "%s-%s/%s" % (seed, _seed, woof)
-    #TODO check same
+    #TODO refaire recherche
 
     pet         = query_from_woof_name(woof_name)
 
