@@ -1,3 +1,4 @@
+
 Vue.component('step', {
   props: ['title', 'method', 'url_root', 'route', 'use', 'curl_cmd', 'data', 'm_return'],
   template: `
@@ -20,6 +21,7 @@ Vue.component('step', {
        </tbody>
        </table>
       <pre><code class="language-bash line-numbers">{{curl_command}}</code></pre>
+      <button v-on:click="call_curl_cmd">test it</button>
       <b>Return</b>
       <div class="return">
         <i><p>{{m_return}}</p></i>
@@ -70,5 +72,12 @@ var app = new Vue({
           console.log("****");
           sessionStorage.setItem("auth_login", val)
         }
+    },
+  methods: {
+    call_curl_cmd: function execute_curl(cmd){
+      console.log("will parse ", cmd);
+      parse_curl_js.parse(cmd);
+      // const curlCmd = `curl 'http://server.com:5050/a/c/getName/?param1=pradeep&param2=kumar&param3=sharma'`;
     }
+  }
 });
