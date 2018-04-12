@@ -11,7 +11,6 @@ from os import environ
 def internal_url(uri):
     external_url  = environ.get('INTERNAL_URL')
     url           = (external_url + uri) if external_url is not None else url_for('access_token', _external=True)
-    print "**** url made?", url
     return url
 
 def conversion(data):

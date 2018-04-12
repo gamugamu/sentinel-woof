@@ -72,13 +72,18 @@ Vue.component('step', {
   },
   methods: {
     call_curl_cmd: function(cmd){
-      console.log("will parse ", this.curl_command);
-      var res = parse_curl_js.parse(`curl 'http://127.0.0.1:8000/'`);
-      console.log(JSON.stringify(res, null, 2));
       console.log("done");
-    // const curlCmd = `curl 'http://server.com:5050/a/c/getName/?param1=pradeep&param2=kumar&param3=sharma'`;
+      axios.post('/test/curl_cmd', {
+        command: this.curl_command
+      })
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+      }
   }
-}
 })
 
 var app = new Vue({
