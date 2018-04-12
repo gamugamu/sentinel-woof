@@ -87,7 +87,7 @@
         <h5 class="center">Teste directement les services</h5>
         <div class="cyan lighten-5 input-field col s6">
             <i class="indent material-icons prefix orange-text text-darken-3">verified_user</i>
-            <input v-model="client_id" type="text" placeholder="token bearer" class="validate">
+            <input v-model="session_token" type="text" placeholder="token bearer" class="validate">
         </div>
       </div><!-- box -->
 
@@ -109,7 +109,7 @@
         route           = "me"
         required_bearer = "true"
         use             = "Modifie les informations de l'utilisateur."
-
+        require_login   = true
         v-bind:curl_cmd = "{
           'name'   : 'your_name',
           'mail'   : 'your_mail@gmail.com'}"
@@ -124,18 +124,20 @@
         url_root          = {{url_root}}
         route             = "me"
         required_bearer   = "true"
+        require_login     = true
         use               = "Supprime l'utilisateur. Nécessite de se reloger pour avoir une nouvelle session"
         m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;me&quot;: { } }">
       </step>
 
-      <h2>/Pets</h2>
+      <h2>/pets</h2>
       <step red lighten-1
-        title             = "Pets"
+        title             = "List Pets"
         method            = "GET"
         url_root          = {{url_root}}
         route             = "pets"
         required_bearer   = "true"
         use               = "Retourne la liste des animaux de l'utilisateur"
+        require_login     = true
         m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;me&quot;: { } }">
       </step>
       <step red lighten-1
@@ -145,16 +147,18 @@
         route             = "pets"
         required_bearer   = "true"
         use               = "Rajoute un pet."
+        require_login     = true
         m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;me&quot;: { } }">
       </step>
       <h2>/pet</h2>
       <step red lighten-1
-        title             = "pet"
+        title             = "Détail pet"
         method            = "GET"
         url_root          = {{url_root}}
         route             = "pet/<pet_name>"
         required_bearer   = "true"
         use               = "Retourne un pet en particulier."
+        require_login     = true
         m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;me&quot;: { } }">
       </step>
       <step red lighten-1
@@ -164,6 +168,7 @@
         route             = "pet/<pet_name>"
         required_bearer   = "true"
         use               = "Modifie un pet."
+        require_login     = true
         m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;me&quot;: { } }">
       </step>
 

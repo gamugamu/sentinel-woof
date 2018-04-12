@@ -34,12 +34,12 @@ Vue.component('step', {
             <template v-if="require_oauth">
               <a  v-on:click="call_curl_cmd()"
                   class="test cyan darken-1 waves-effect waves-light btn right top"
-                  v-bind:class="{ disabled: !can_test_login}" >Teste</a>
+                  v-bind:class="{ disabled: !can_test_oauth}" ><i class="material-icons right">confirmation_number</i>Test</a>
             </template>
             <template v-if="require_login">
               <a  v-on:click="call_curl_cmd()"
-                  class="test orange darken-1 waves-effect waves-light btn right top"
-                  v-bind:class="{ disabled: !can_test_login}" >Teste</a>
+                  class="test orange darken-3 waves-effect waves-light btn right top"
+                  v-bind:class="{ disabled: !can_test_login}"><i class="material-icons right">verified_user</i>test</a>
             </template>
           </div>
       </div>
@@ -75,15 +75,20 @@ Vue.component('step', {
 
       this.m_json_return = "\n" + this.pretty_json(this.m_return)
       cmd += this.url_root + this.route;
-      console.log("--> ", this.can_test_login);
+
       return cmd
       }
     },
-    can_test_login:{
+    can_test_oauth:{
         get: function () {
           return  this.$parent.client_id.length != 0 &&
                   this.$parent.provider.length  != 0 &&
                   this.$parent.auth_login.length != 0
+        }
+    },
+    can_test_login:{
+        get: function () {
+          return  this.$parent.session_token.length != 0
         }
     }
   },
@@ -100,7 +105,6 @@ Vue.component('step', {
       return obj
     },
     call_curl_cmd(cmd){
-
       _this         = this
       _this.loading = true
 
@@ -124,9 +128,10 @@ var app = new Vue({
   el: '#app',
   delimiters: ['${', '}'],
   data:{
-    client_id: sessionStorage.getItem("client_id"),
-    provider: sessionStorage.getItem("provider"),
-    auth_login: sessionStorage.getItem("auth_login"),
+    client_id:  sessionStorage.getItem("client_id")   ? sessionStorage.getItem("client_id")   : "",
+    provider:   sessionStorage.getItem("provider")    ? sessionStorage.getItem("provider")    : "",
+    auth_login: sessionStorage.getItem("auth_login")  ? sessionStorage.getItem("auth_login")  : "",
+    session_token: sessionStorage.getItem("auth_login")  ? sessionStorage.getItem("auth_login")  : "",
   },
   watch: {
         'client_id': function(val, oldVal){
@@ -137,6 +142,9 @@ var app = new Vue({
         },
         'auth_login': function(val, oldVal){
           sessionStorage.setItem("auth_login", val)
+        },
+        'session_token': function(val, oldVal){
+          sessionStorage.setItem("session_token", val)
         }
     }
 });
