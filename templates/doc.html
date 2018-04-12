@@ -33,13 +33,12 @@
     <hr flex/></span>
     <div id="app">
       <div class="box">
-        <p>Teste directement les services!<p>
+        <p>Teste directement le login!<p>
         <div class="cyan lighten-5 input-field col s6">
             <i class="material-icons prefix red-text text-darken-1">card_membership</i>
             <input v-model="client_id" type="text" placeholder="Client id" class="validate">
             <a class="grey darken-3 lighten-1 waves-effect waves-light btn">Je n'ai pas de client-id</a>
         </div>
-
         <div class="cyan lighten-5 input-field col s6">
           </br>
           <form action="#">
@@ -81,6 +80,16 @@
           'token_secret'  : '(facultatif) token secret si fourni par le provider (ex twitter)'}"
           m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;oauth&quot;: { &quot;access_token&quot;: &quot;O9wIOVAXivMIJRDWOCSq2NR8079SAV&quot;, &quot;expires_in&quot;: 3600, &quot;refresh_token&quot;: &quot;2BQQjQR5DNurARHrtXAHLnpFvLgWcs&quot;, &quot;scope&quot;: &quot;&quot;, &quot;token_type&quot;: &quot;Bearer&quot; } }">
       </step>
+
+      <div class="box">
+        <p>Teste directement les services!<p>
+        <div class="cyan lighten-5 input-field col s6">
+            <i class="material-icons prefix red-text text-darken-1">card_membership</i>
+            <input v-model="client_id" type="text" placeholder="Client id" class="validate">
+            <a class="grey darken-3 lighten-1 waves-effect waves-light btn">Je n'ai pas de client-id</a>
+        </div>
+      </div><!-- box -->
+
       <hr class="style">
       <step red lighten-1
         title             = "Profil User"

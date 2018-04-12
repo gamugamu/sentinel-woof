@@ -1,6 +1,6 @@
 
 Vue.component('step', {
-  props: ['title', 'method', 'url_root', 'route', 'required_bearer', 'use', 'curl_cmd', 'data', 'm_return', 'return_id'],
+  props: ['title', 'method', 'url_root', 'route', 'required_bearer', 'use', 'curl_cmd', 'data', 'm_return', 'return_id', 'json_return'],
   template: `
     <div>
       <h5 v-if="title">• {{title}}</h5>
@@ -22,11 +22,16 @@ Vue.component('step', {
        </tbody>
        </table>
       <pre><code class="language-bash line-numbers">{{curl_command}}</code></pre>
-      <button v-on:click="call_curl_cmd()">test it</button>
-      <b>Return</b>
+      <div>
+        <h5>Return</h5>
+          <div v-show="loading" class="progress">
+            <div class="indeterminate"></div>
+          </div>
           <pre class="return margin_tight">
-            {{json_return}}
+            {{m_json_return}}
+            <a  v-on:click="call_curl_cmd()" class="test orange darken-3 waves-effect waves-light btn right top">Teste</a>
           </pre>
+      </div>
     </div>
   `,computed: {
     // un accesseur (getter) calculé
@@ -35,7 +40,7 @@ Vue.component('step', {
       // `this` pointe sur l'instance vm
       var cmd = "curl -i -H \"Content-Type: application/json\" "
       if (this.required_bearer == "true"){
-          cmd += '-i -H "Authorization: Bearer XXXX_TOKEN_XXXX "'
+          cmd += '-i -H "Authorization: Bearer XXXX_TOKEN_XXXX" '
       }
 
       if (this.curl_cmd != undefined){
@@ -56,33 +61,47 @@ Vue.component('step', {
         cmd = cmd.slice(0, -2); // ', '
         cmd += "}' "
       }
-      //var obj                   = JSON.parse(this.m_return);
-      //ciResponseText.innerHTML  = JSON.stringify(obj, undefined, 2);
-      var obj = JSON.parse(this.m_return);
-      obj     = JSON.stringify(obj, undefined, 2);
-      console.log(obj);
-      this.json_return = "\n" + obj
-    //  console.log("stringyfied ---> ", obj);
 
+      console.log("--> ", this, this.pretty_json(this.m_return));
+      this.m_json_return = "\n" + this.pretty_json(this.m_return)
       cmd += this.url_root + this.route;
 
       return cmd
       }
     }
   },
+  data: function () {
+      return {
+          m_json_return: this.json_return,
+          loading: false
+      };
+  },
   methods: {
-    call_curl_cmd: function(cmd){
-      console.log("done");
+    pretty_json(format){
+      var obj = JSON.parse(format);
+      obj     = JSON.stringify(obj, undefined, 2);
+      console.log("p_t", obj);
+      return obj
+    },
+    call_curl_cmd(cmd){
+
+      _this         = this
+      _this.loading = true
+
       axios.post('/test/curl_cmd', {
         command: this.curl_command
       })
       .then(function (response) {
         console.log(response.data);
+        _this.m_json_return = "\n" + response.data
+        _this.loading = false
       })
       .catch(function (error) {
         console.log(error);
+        _this.m_json_return = error
+        _this.loading = false
       });
-      }
+    }
   }
 })
 

@@ -51,6 +51,8 @@ def me_oauth():
         if e is None:
             print "will convert ?"
             token, errorMessage = credential.conversion(request.json)
+            #TODO refactor
+            error.info  = errorMessage
         else:
             error.code  = Error_code.MALFSCHE
             error.info  = str(e)

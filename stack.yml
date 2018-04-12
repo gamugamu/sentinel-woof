@@ -10,6 +10,8 @@ services:
 
     environment:
       POSTGRES_PASSWORD: secretpassword
+    ports:
+      - 5432:5432
 
   mongodb:
     image: mongo

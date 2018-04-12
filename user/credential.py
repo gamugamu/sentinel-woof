@@ -25,7 +25,6 @@ def conversion(data):
         #TODO user_info doit être similaire entre woofwoof, google, yahoo, et twitter
         user_id     = user_cloud_info["id"]
         user_pass   = hashlib.sha224(user_id).hexdigest()
-
         # note: _user est privé. Ne pas exposer aux clients.
         _user   = user_from_credential(user_id, user_pass)
         r       = requests.post(internal_url(url_for('access_token')),
@@ -35,7 +34,6 @@ def conversion(data):
                             'username'  : user_id,
                             'password'  : user_pass})
 
-        print "result? ", r.text
         token = json.loads(r.text)
         # le client peut être invalide.
         if "error" in token:
@@ -55,6 +53,7 @@ def conversion(data):
             token["scope"] = "user:mutable"
     # bad credential
     else:
+        #TODO refactor
         errorMessage = 'credential is invalid'
 
     return token, errorMessage
