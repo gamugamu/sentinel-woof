@@ -20,7 +20,7 @@ def me_oauth():
     #detect si un refresh_token
     refresh_token = None
     error         = Error()
-    print "Send? ", request.json
+    print "call ? ", request.json
     # si c'est un refresh token, on le rafraichit
     if request.json is not None:
         refresh_token = request.json.get("refresh_token")

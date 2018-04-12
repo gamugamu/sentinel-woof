@@ -1,6 +1,6 @@
 
 Vue.component('step', {
-  props: ['title', 'method', 'url_root', 'route', 'required_bearer', 'use', 'curl_cmd', 'data', 'm_return', 'return_id', 'json_return'],
+  props: ['title', 'method', 'url_root', 'route', 'required_bearer', 'use', 'curl_cmd', 'data', 'm_return', 'require_oauth', 'require_login', 'return_id', 'json_return'],
   template: `
     <div>
       <h5 v-if="title">• {{title}}</h5>
@@ -27,10 +27,21 @@ Vue.component('step', {
           <div v-show="loading" class="progress">
             <div class="indeterminate"></div>
           </div>
-          <pre class="return margin_tight">
-            {{m_json_return}}
-            <a  v-on:click="call_curl_cmd()" class="test orange darken-3 waves-effect waves-light btn right top">Teste</a>
-          </pre>
+          <div class="return">
+            <pre>
+              {{m_json_return}}
+            </pre>
+            <template v-if="require_oauth">
+              <a  v-on:click="call_curl_cmd()"
+                  class="test cyan darken-1 waves-effect waves-light btn right top"
+                  v-bind:class="{ disabled: !can_test_login}" >Teste</a>
+            </template>
+            <template v-if="require_login">
+              <a  v-on:click="call_curl_cmd()"
+                  class="test orange darken-1 waves-effect waves-light btn right top"
+                  v-bind:class="{ disabled: !can_test_login}" >Teste</a>
+            </template>
+          </div>
       </div>
     </div>
   `,computed: {
@@ -62,12 +73,18 @@ Vue.component('step', {
         cmd += "}' "
       }
 
-      console.log("--> ", this, this.pretty_json(this.m_return));
       this.m_json_return = "\n" + this.pretty_json(this.m_return)
       cmd += this.url_root + this.route;
-
+      console.log("--> ", this.can_test_login);
       return cmd
       }
+    },
+    can_test_login:{
+        get: function () {
+          return  this.$parent.client_id.length != 0 &&
+                  this.$parent.provider.length  != 0 &&
+                  this.$parent.auth_login.length != 0
+        }
     }
   },
   data: function () {
@@ -80,7 +97,6 @@ Vue.component('step', {
     pretty_json(format){
       var obj = JSON.parse(format);
       obj     = JSON.stringify(obj, undefined, 2);
-      console.log("p_t", obj);
       return obj
     },
     call_curl_cmd(cmd){
@@ -92,7 +108,6 @@ Vue.component('step', {
         command: this.curl_command
       })
       .then(function (response) {
-        console.log(response.data);
         _this.m_json_return = "\n" + response.data
         _this.loading = false
       })

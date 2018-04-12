@@ -35,7 +35,7 @@
       <div class="box">
         <p>Teste directement le login!<p>
         <div class="cyan lighten-5 input-field col s6">
-            <i class="material-icons prefix red-text text-darken-1">card_membership</i>
+            <i class="indent material-icons prefix orange-text text-darken-3">card_membership</i>
             <input v-model="client_id" type="text" placeholder="Client id" class="validate">
             <a class="grey darken-3 lighten-1 waves-effect waves-light btn">Je n'ai pas de client-id</a>
         </div>
@@ -54,7 +54,7 @@
             </center>
           </form>
           <div class="white input-field">
-            <i class="red-text text-darken-1 inline-icon material-icons prefix">confirmation_number</i>
+            <i class="indent material-icons prefix orange-text text-darken-3">confirmation_number</i>
             <input v-model="auth_login" placeholder="auth login" name="f" type="text" class="validate">
           </div>
         </div><!-- forms -->
@@ -67,6 +67,7 @@
         url_root    = {{url_root}}
         route       = "me/oauth"
         use         = "Permet de récupérer un token d'authentification pour les accès personels woof."
+        require_oauth = true
         v-bind:curl_cmd   = "{
           'client_id'     : '*client_id',
           'provider'      : '*provider',
@@ -80,17 +81,16 @@
           'token_secret'  : '(facultatif) token secret si fourni par le provider (ex twitter)'}"
           m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;oauth&quot;: { &quot;access_token&quot;: &quot;O9wIOVAXivMIJRDWOCSq2NR8079SAV&quot;, &quot;expires_in&quot;: 3600, &quot;refresh_token&quot;: &quot;2BQQjQR5DNurARHrtXAHLnpFvLgWcs&quot;, &quot;scope&quot;: &quot;&quot;, &quot;token_type&quot;: &quot;Bearer&quot; } }">
       </step>
-
+      <hr class="style">
+    </br>
       <div class="box">
-        <p>Teste directement les services!<p>
+        <h5 class="center">Teste directement les services</h5>
         <div class="cyan lighten-5 input-field col s6">
-            <i class="material-icons prefix red-text text-darken-1">card_membership</i>
-            <input v-model="client_id" type="text" placeholder="Client id" class="validate">
-            <a class="grey darken-3 lighten-1 waves-effect waves-light btn">Je n'ai pas de client-id</a>
+            <i class="indent material-icons prefix orange-text text-darken-3">verified_user</i>
+            <input v-model="client_id" type="text" placeholder="token bearer" class="validate">
         </div>
       </div><!-- box -->
 
-      <hr class="style">
       <step red lighten-1
         title             = "Profil User"
         method            = "GET"
@@ -99,6 +99,7 @@
         required_bearer   = "true"
         use               = "Renvoie les informations de l'utilisateur."
         return_id         = "return_id"
+        require_login     = true
         m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;me&quot;: { &quot;mail&quot;: null, &quot;name&quot;: null, &quot;seed&quot;: &quot;causal-locust&quot; } }">
       </step>
       <step red lighten-1

@@ -20,6 +20,7 @@ def conversion(data):
         data.get("authlogin"), data.get("secret"), provider)
     token           = {}
     errorMessage    = ""
+    print "convert ?", code, user_cloud_info
 
     if code == 200:
         #TODO user_info doit être similaire entre woofwoof, google, yahoo, et twitter
@@ -54,6 +55,7 @@ def conversion(data):
     # bad credential
     else:
         #TODO refactor
+        print "error "
         errorMessage = 'credential is invalid'
 
     return token, errorMessage
