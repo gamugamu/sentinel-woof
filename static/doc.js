@@ -22,7 +22,7 @@ Vue.component('step', {
        </tbody>
        </table>
       <pre><code class="language-bash line-numbers">{{curl_command}}</code></pre>
-      <button v-on:click="call_curl_cmd">test it</button>
+      <button v-on:click="call_curl_cmd()">test it</button>
       <b>Return</b>
           <pre class="return margin_tight">
             {{json_return}}
@@ -30,7 +30,8 @@ Vue.component('step', {
     </div>
   `,computed: {
     // un accesseur (getter) calculé
-    curl_command: function () {
+    curl_command: {
+      get: function () {
       // `this` pointe sur l'instance vm
       var cmd = "curl -i -H \"Content-Type: application/json\" "
       if (this.required_bearer == "true"){
@@ -66,8 +67,18 @@ Vue.component('step', {
       cmd += this.url_root + this.route;
 
       return cmd
+      }
     }
+  },
+  methods: {
+    call_curl_cmd: function(cmd){
+      console.log("will parse ", this.curl_command);
+      var res = parse_curl_js.parse(`curl 'http://127.0.0.1:8000/'`);
+      console.log(JSON.stringify(res, null, 2));
+      console.log("done");
+    // const curlCmd = `curl 'http://server.com:5050/a/c/getName/?param1=pradeep&param2=kumar&param3=sharma'`;
   }
+}
 })
 
 var app = new Vue({
@@ -88,12 +99,5 @@ var app = new Vue({
         'auth_login': function(val, oldVal){
           sessionStorage.setItem("auth_login", val)
         }
-    },
-  methods: {
-    call_curl_cmd: function execute_curl(cmd){
-      console.log("will parse ", cmd);
-      parse_curl_js.parse(cmd);
-      // const curlCmd = `curl 'http://server.com:5050/a/c/getName/?param1=pradeep&param2=kumar&param3=sharma'`;
     }
-  }
 });
