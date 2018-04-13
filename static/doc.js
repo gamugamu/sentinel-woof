@@ -1,6 +1,7 @@
 
 Vue.component('step', {
-  props: ['title', 'method', 'url_root', 'route', 'required_bearer', 'use', 'curl_cmd', 'data', 'm_return', 'require_oauth', 'require_login', 'return_id', 'json_return'],
+  props: ['title', 'method', 'url_root', 'route', 'required_bearer', 'use', 'curl_cmd',
+  'data', 'm_return', 'require_oauth', 'require_login', 'return_id', 'json_return', 'dyn_value'],
   template: `
     <div>
       <h5 v-if="title">• {{title}}</h5>
@@ -12,15 +13,31 @@ Vue.component('step', {
          <tr>
              <th><i>key</i></th>
              <th><i>value</i></th>
+             <th><i></i></th>
          </tr>
        </thead>
        <tbody>
        <tr v-for="(v, k) in data">
           <th>{{k}}</th>
           <td>{{v}}</td>
+          <td v-if="dyn_value !== undefined && k in dyn_value" >
+            <div class="input-field dyno_value">
+              <input v-model="dyn_value[k]" id="first_name2" type="text" class="validate">
+              <label for="first_name2">{{k}}</label>
+            </div>
+          </td>
        </tr>
        </tbody>
        </table>
+
+       <table class="bordered" v-if="this.dyn_value != undefined">
+          <tbody>
+            <tr v-for="(v, k) in data">
+
+            </tr>
+          </tbody>
+        </table>
+
       <pre><code class="language-bash line-numbers">{{curl_command}}</code></pre>
       <div>
         <h5>Return</h5>

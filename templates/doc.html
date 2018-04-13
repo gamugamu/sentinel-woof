@@ -32,6 +32,7 @@
     <h4>Woof API-services</h4>
     <hr flex/></span>
     <div id="app">
+
       <div class="box">
         <h6>Teste directement le login!</h6>
         <div class="cyan lighten-5 input-field col s6">
@@ -85,6 +86,7 @@
           'token_secret'  : '(facultatif) token secret si fourni par le provider (ex twitter)'}"
           m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;oauth&quot;: { &quot;access_token&quot;: &quot;O9wIOVAXivMIJRDWOCSq2NR8079SAV&quot;, &quot;expires_in&quot;: 3600, &quot;refresh_token&quot;: &quot;2BQQjQR5DNurARHrtXAHLnpFvLgWcs&quot;, &quot;scope&quot;: &quot;&quot;, &quot;token_type&quot;: &quot;Bearer&quot; } }">
       </step>
+
       <hr class="style">
     </br>
       <div class="box">
@@ -114,6 +116,9 @@
         required_bearer = "true"
         use             = "Modifie les informations de l'utilisateur."
         require_login   = true
+        v-bind:dyn_value =  "{
+          'name'   : 'dynamo',
+          'mail'   : 'dynamox'}"
         v-bind:curl_cmd = "{
           'name'   : 'your_name',
           'mail'   : 'your_mail@gmail.com'}"

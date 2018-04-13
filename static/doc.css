@@ -82,3 +82,10 @@ pre {
 .anchor{
   margin-top: 10px;
 }
+
+.dyno_value{
+  height: 40px;
+  padding: 0px;
+  margin: 0px;
+  background-color: AliceBlue ;
+}
