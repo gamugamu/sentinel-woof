@@ -53,19 +53,22 @@ def conversion(data):
             #TODO: gestion du scope
             token["scope"] = "user:mutable"
 
-    #pass
+    #pass. Rethrow
     except ErrorException as e:
         raise e
 
     return token
 
 def refresh(data):
-    print "refresh ", internal_url(url_for('access_token'))
     r  = requests.post(internal_url(url_for('access_token')),
                 data = {
                     'client_id'         : data["client_id"],
                     'grant_type'        : 'refresh_token',
                     'refresh_token'     : data["refresh_token"]})
-    print "loaded "
     token = json.loads(r.text)
+
+    if token.get("error") is not None:
+        # mauvais token
+        raise ErrorException(Error(code=Error_code.INVGRANT))
+
     return token

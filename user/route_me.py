@@ -24,31 +24,16 @@ def me_oauth():
 
         # Si c'est un refresh token, on le rafraichit
         if refresh_token is not None:
-            sanitized = schema.validate_refresh_token(request.json)
-
-            token   = credential.refresh(sanitized)
-            e_str   = token.get("error")
-            print "TOKEN ", token, e_str
-
-            if e_str is not None:
-                # mauvais token
-                error.code  = Error_code.INVGRANT
-                error.info  = e_str
-                token       = {}
+            sanitized   = schema.validate_refresh_token(request.json)
+            token       = credential.refresh(sanitized)
         # Sinon c'est une demande de ticket via un provider (google, facebook, twitter)
         else:
             # valide que les clès sont bonnes
-            sanitized = schema.validate_userbycredential(request.json)
-            print "validated**** ", sanitized, request.json
-            token = credential.conversion(sanitized)
-
-            print "result ?", token
+            sanitized   = schema.validate_userbycredential(request.json)
+            token       = credential.conversion(sanitized)
 
     except ErrorException as e:
-        print "---ErrorException ", e
         error = e.error
-        token = {}
-        print str(error)
     # retourne le compte
     return jsonify({"error" : error.to_arr(), "oauth" : token})
 
