@@ -35,7 +35,7 @@ def me_oauth():
     except ErrorException as e:
         error = e.error
     # retourne le compte
-    return jsonify({"error" : error.to_arr(), "oauth" : token})
+    return jsonify({"error" : error.to_dict(), "oauth" : token})
 
 # Info utilisateur. Retourne les infos de l'utilisateurs. Mutable sauf le seed.
 @route_me.route('/me', methods=['GET', 'PUT', 'DELETE'])
@@ -44,23 +44,20 @@ def me_profil():
     from storage.models import PetsOwner, delete_n_commit, commit
 
     peto, error = petsOwner_from_session()
-
     # • Retourne l'utilisateur actuel.
     if request.method == 'GET':
         pass
 
     # • Modifie l'utilisateur.
     elif request.method == 'PUT':
-        data            = request.get_json()
-        sanitized, e    = schema.validate_me(data)
-
-        if e is None:
+        try:
+            data       = request.get_json()
+            sanitized  = schema.validate_me(data)
             put_sanitized(sanitized, peto)
             commit()
-        else:
-            # Blank
-            error.code  = Error_code.MALFSCHE
-            error.info  = str(e)
+
+        except ErrorException as e:
+            error = e.error
 
     # • Supprime l'utilisateur.
     elif request.method == 'DELETE':

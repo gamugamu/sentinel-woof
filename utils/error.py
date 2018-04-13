@@ -38,9 +38,9 @@ class Error:
         self.code           = code
         self.custom_message = custom_message
 
-    def to_arr(self):
+    def to_dict(self):
         message = self.custom_message if self.custom_message is not None else info_error[self.code]
         return {"code" : self.code.value, "message": message}
 
     def __str__(self):
-        return str(self.to_arr())
+        return str(self.to_dict())

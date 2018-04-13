@@ -71,6 +71,8 @@ Vue.component('step', {
         }
         cmd = cmd.slice(0, -2); // ', '
         cmd += "}' "
+      }else if(this.method != "GET"){
+        cmd += "-X " + this.method + " "
       }
 
       this.m_json_return = "\n" + this.pretty_json(this.m_return)
