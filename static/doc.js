@@ -51,7 +51,7 @@ Vue.component('step', {
       // `this` pointe sur l'instance vm
       var cmd = "curl -i -H \"Content-Type: application/json\" "
       if (this.required_bearer == "true"){
-          cmd += '-i -H "Authorization: Bearer XXXX_TOKEN_XXXX" '
+          cmd += '-i -H "Authorization: Bearer ' + this.$parent.session_token + '" '
       }
 
       if (this.curl_cmd != undefined){
@@ -131,7 +131,7 @@ var app = new Vue({
     client_id:  sessionStorage.getItem("client_id")   ? sessionStorage.getItem("client_id")   : "",
     provider:   sessionStorage.getItem("provider")    ? sessionStorage.getItem("provider")    : "",
     auth_login: sessionStorage.getItem("auth_login")  ? sessionStorage.getItem("auth_login")  : "",
-    session_token: sessionStorage.getItem("auth_login")  ? sessionStorage.getItem("auth_login")  : "",
+    session_token: sessionStorage.getItem("session_token")  ? sessionStorage.getItem("session_token")  : "",
   },
   watch: {
         'client_id': function(val, oldVal){
