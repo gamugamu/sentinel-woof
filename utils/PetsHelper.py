@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from utils.error import *
+from utils.Sanitizer import put_sanitized
+
 MAX_PET = 20
 
 def new_pet(peto):
@@ -23,10 +25,9 @@ def new_pet(peto):
 
 def put_from_sanitized(dict, pet, peto):
     from storage.models import Pet, commit
-    from utils.Sanitizer import put_sanitized
     from sqlalchemy import and_
     import os.path
-    print "**** ", dict, pet, peto
+
     if Pet.query.filter(and_(Pet._petowner_id == peto.id, Pet.name == dict["name"])).first():
         error = Error(code=Error_code.PETNAMEEX)
         raise ErrorException(error)
@@ -36,4 +37,15 @@ def put_from_sanitized(dict, pet, peto):
 
 def query_from_woof_name(woof_name):
     from storage.models import Pet
+
     return Pet.query.filter_by(woof_name=woof_name).first()
+
+def query_from_pet_name(peto, name):
+    from storage.models import Pet
+
+    pet = Pet.query.filter(Pet.name==name, Pet._petowner_id == peto.id).first()
+
+    if pet is None:
+        raise ErrorException(Error(code=Error_code.PETNOTFD))
+    else:
+        return pet

@@ -59,6 +59,23 @@ def sanitized_collection(list):
 
     return sanitized
 
+def sanitizer(obj):
+    if isinstance(obj, dict):
+        res = obj
+    else:
+        #OutputMixin
+        res = obj.to_dict()
+        # l'id doit être caché
+        del res['id']
+
+    res_c = res.copy()
+    for k, v in res.iteritems():
+        # clean propriétés privées
+        if k.startswith("_"):
+            del res_c[k]
+
+    return res_c
+
 class OutputMixin(object):
     RELATIONSHIPS_TO_DICT = False
 

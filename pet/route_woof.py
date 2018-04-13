@@ -15,23 +15,18 @@ class RegexConverter(BaseConverter):
         super(RegexConverter, self).__init__(url_map)
         self.regex = items[0]
 
-#@Route woof-name
 @route_woof.route('/<regex("[a-z]{2,10}"):seed>-<_seed>/<regex("[a-z, 0-9]{2,20}"):woof>')
 def route_woof_get(seed, _seed, woof):
     from utils.PetsHelper import query_from_woof_name, put_from_sanitized
     from storage.models import Pet
-#TODO refactor
-    print "%s-%s/%s" % (seed, _seed, woof)
+
     woof_name   = "%s-%s/%s" % (seed, _seed, woof)
     pet         = query_from_woof_name(woof_name)
     error       = Error()
 
     if pet is None:
         error.code  = Error_code.PETNOTFD
-        error.info  = "Pet not found"
         pet         = Pet()
-
-    print "found? ", pet
 
     return jsonify({"error" : error.to_dict(), "woof" : pet.sanitized()})
 
@@ -67,44 +62,34 @@ def me_pets():
 
     return jsonify({"error" : error.to_dict(), "pets" : sanitized_collection(pets)})
 
-@route_woof.route('/pets/<pet_name>', methods=['PUT'])
+@route_woof.route('/pet/<pet_name>', methods=['GET', 'PUT'])
 @oauth.require_oauth()
 def route_woof_put(pet_name):
-    from utils.PetsHelper import query_from_woof_name, put_from_sanitized
+    from utils.PetsHelper import query_from_pet_name, put_from_sanitized
     from utils.UserHelper import petsOwner_from_session
-    from storage.models import Pet, commit
+    from storage.models import Pet, commit, sanitizer
 
-    print "PUT*****"
-    #TODO refactor
-    peto, error = petsOwner_from_session()
-    woof_name   = "%s-%s/%s" % (seed, _seed, woof)
-    #TODO refaire recherche
+    error = Error()
+    pet   = {}
+    try:
+        peto    = petsOwner_from_session()
+        pet     = query_from_pet_name(peto, pet_name)
 
-    pet         = query_from_woof_name(woof_name)
+        if request.method == 'GET':
+            pass
 
-    if pet is None:
-        error.code  = Error_code.PETNOTFD
-        error.info  = "Pet not found"
-    else:
-        data          = request.get_json()
-        sanitized, e  = schema.validate_pet(data)
-        put_from_sanitized(sanitized, pet, peto, e)
-        print "error ", error, pet
-        print "commited"
-        commit()
+        elif request.method == 'PUT':
+            data      = request.get_json()
+            sanitized = schema.validate_pet(data)
+            put_from_sanitized(sanitized, pet, peto)
+            commit()
 
-    return jsonify({"error" : error.to_dict(), "woof" : pet.sanitized()})
+    except ErrorException as e:
+        error = e.error
+        pet   = {}
 
-"""
-    sanitized, e    = schema.validate_pets(data)
-    print "e ", e
-    if e is None:
-        pet, error = new_pet(peto, error)
-        print "e ", error
-        if error.code is Error_code.SUCCESS:
-            print "sanitized", sanitized, pet
-            error = put_from_sanitized(sanitized, pet, peto, error)
-"""
+    return jsonify({"error" : error.to_dict(), "woof" : sanitizer(pet)})
+
 def route(app):
     app.url_map.converters['regex'] = RegexConverter
     app.register_blueprint(route_woof)
