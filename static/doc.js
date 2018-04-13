@@ -22,8 +22,8 @@ Vue.component('step', {
           <td>{{v}}</td>
           <td v-if="dyn_value !== undefined && k in dyn_value" >
             <div class="input-field dyno_value">
-              <input v-model="dyn_value[k]" id="first_name2" type="text" class="validate">
-              <label for="first_name2">{{k}}</label>
+              <input v-model="dyn_value[k]" v-bind:id="k" type="text" class="validate">
+              <label v-bind:for="k">{{k}}</label>
             </div>
           </td>
        </tr>
