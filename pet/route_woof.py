@@ -5,7 +5,8 @@ import utils.SchemaValidator as schema
 import utils.TokenBearer as Token_Bearer
 from flask_sentinel import oauth
 from werkzeug.routing import BaseConverter
-from utils.error import Error, Error_code
+from utils.error import *
+from utils.UserHelper import petsOwner_from_session
 
 route_woof = Blueprint('route_woof', __name__, template_folder='templates')
 
@@ -33,6 +34,38 @@ def route_woof_get(seed, _seed, woof):
     print "found? ", pet
 
     return jsonify({"error" : error.to_dict(), "woof" : pet.sanitized()})
+
+# Les animaux du petowner. Post pour rajouter.
+@route_woof.route('/pets', methods=['POST', 'GET'])
+@oauth.require_oauth()
+def me_pets():
+    from storage.models import PetsOwner, sanitized_collection, commit
+    from utils.PetsHelper import new_pet, put_from_sanitized
+
+    error = Error()
+    pets  = {}
+
+    try:
+        peto = petsOwner_from_session()
+
+        # • Retourne l'utilisateur actuel.
+        if request.method == 'GET':
+            pets = peto.pets
+
+        # • Modifie l'utilisateur.
+        elif request.method == 'POST':
+            data        = request.get_json()
+            sanitized   = schema.validate_pet(data)
+            pet         = new_pet(peto)
+            # mutate and save
+            put_from_sanitized(sanitized, pet, peto)
+            commit()
+            pets        = peto.pets
+
+    except ErrorException as e:
+        error = e.error
+
+    return jsonify({"error" : error.to_dict(), "pets" : sanitized_collection(pets)})
 
 @route_woof.route('/pets/<pet_name>', methods=['PUT'])
 @oauth.require_oauth()

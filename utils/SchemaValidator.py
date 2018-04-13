@@ -37,8 +37,8 @@ def validate_me(data):
         return schema.validate(data)
 
     except Exception as e:
-        #TODO à faire
-        return "{}", e
+        error = Error(code=Error_code.MALFSCHE, custom_message=str(e))
+        raise ErrorException(error)
 
 def validate_pet(data):
     if not data:
@@ -47,8 +47,8 @@ def validate_pet(data):
         schema = Schema({   'name' : basestring,
                         }, ignore_extra_keys=True)
 
-        return schema.validate(data), None
+        return schema.validate(data)
 
     except Exception as e:
-        #TODO à faire
-        return "{}", e
+        error = Error(code=Error_code.MALFSCHE, custom_message=str(e))
+        raise ErrorException(error)

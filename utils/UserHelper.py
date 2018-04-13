@@ -44,10 +44,8 @@ def petsOwner_from_session():
     sent_id = str(user._id)
     peto    = PetsOwner.query.filter_by(_sentinel_id=sent_id).first()
 
-    error   = Error()
     if peto is None:
-        peto = Pet_Dummy()
-        error.code  = Error_code.USERNOTFD
-        error.info  = "User not found. Did you delete it? (-X DELETE /me). You need to relogin again with a provider token (/me/oauth) and a new user will be recreated"
+        error = Error(code=Error_code.USERNOTFD)
+        raise ErrorException(error)
 
-    return peto, error
+    return peto

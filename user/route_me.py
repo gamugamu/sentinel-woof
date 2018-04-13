@@ -65,38 +65,3 @@ def me_profil():
         peto = PetsOwner()
 
     return jsonify({"error" : error.to_dict(), "me" : peto.sanitized()})
-
-# Les animaux du petowner. Post pour rajouter.
-#TODO deplacer
-@route_me.route('/pets', methods=['POST', 'GET'])
-@oauth.require_oauth()
-def me_pets():
-    from storage.models import PetsOwner, sanitized_collection, commit
-    from utils.PetsHelper import new_pet, put_from_sanitized
-
-    peto, error = petsOwner_from_session()
-    print "peto ", peto
-    # • Retourne l'utilisateur actuel.
-    if request.method == 'GET':
-        pass
-
-    # • Modifie l'utilisateur.
-    elif request.method == 'POST':
-        data            = request.get_json()
-        sanitized, e    = schema.validate_pet(data)
-        print "e ", e
-        if e is None:
-            pet, error = new_pet(peto, error)
-            print "e ", error
-            if error.code is Error_code.SUCCESS:
-                print "sanitized", sanitized, pet
-                error = put_from_sanitized(sanitized, pet, peto, error)
-                print "name ", pet.name
-                print "commited"
-                commit()
-        else:
-            # Blank
-            error.code  = Error_code.MALFSCHE
-            error.info  = str(e)
-
-    return jsonify({"error" : error.to_dict(), "pets" : sanitized_collection(peto.pets)})
