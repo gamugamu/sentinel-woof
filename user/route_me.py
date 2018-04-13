@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Blueprint, request, jsonify
 from sqlalchemy.ext.serializer import dumps
-from utils.error import Error, Error_code
+from utils.error import *
 import json
 import utils.SchemaValidator as schema
 import utils.TokenBearer as Token_Bearer
@@ -17,49 +17,40 @@ def me_oauth():
     from utils import SchemaValidator as schema
     import credential
 
-    #detect si un refresh_token
-    refresh_token = None
-    error         = Error()
-    print "call ? ", request.json
-    # si c'est un refresh token, on le rafraichit
-    if request.json is not None:
+    error = Error()
+    token = {}
+    try:
         refresh_token = request.json.get("refresh_token")
 
-    if refresh_token is not None:
-        sanitized, e = schema.validate_refresh_token(request.json)
+        # Si c'est un refresh token, on le rafraichit
+        if refresh_token is not None:
+            sanitized = schema.validate_refresh_token(request.json)
 
-        if e is None:
             token   = credential.refresh(sanitized)
             e_str   = token.get("error")
             print "TOKEN ", token, e_str
+
             if e_str is not None:
                 # mauvais token
                 error.code  = Error_code.INVGRANT
                 error.info  = e_str
                 token       = {}
+        # Sinon c'est une demande de ticket via un provider (google, facebook, twitter)
         else:
-            # mauvais schema
-            error.code  = Error_code.MALFSCHE
-            error.info  = str(e)
+            # valide que les clès sont bonnes
+            sanitized = schema.validate_userbycredential(request.json)
+            print "validated**** ", sanitized, request.json
+            token = credential.conversion(sanitized)
 
-    # c'est une demande de ticket via un provider (google, facebook, twitter)
-    else:
-        # valide que les clès sont bonnes
-        sanitized, e    = schema.validate_userbycredential(request.json)
-        token           = {}
-        print "result ? ", request.json
-        if e is None:
-            print "will convert ?"
-            token, errorMessage = credential.conversion(request.json)
-            #TODO refactor
-            error.info  = errorMessage
-        else:
-            error.code  = Error_code.MALFSCHE
-            error.info  = str(e)
+            print "result ?", token
 
-        print "result ?", token
+    except ErrorException as e:
+        print "---ErrorException ", e
+        error = e.error
+        token = {}
+        print str(error)
     # retourne le compte
-    return jsonify({"error" : error.to_dict(), "oauth" : token})
+    return jsonify({"error" : error.to_arr(), "oauth" : token})
 
 # Info utilisateur. Retourne les infos de l'utilisateurs. Mutable sauf le seed.
 @route_me.route('/me', methods=['GET', 'PUT', 'DELETE'])

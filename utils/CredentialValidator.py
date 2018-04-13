@@ -3,6 +3,7 @@ import httplib2
 import json
 from oauth2client.client import AccessTokenCredentials
 from flask_oauthlib.client import OAuth
+from utils.error import *
 
 def request_user_info_by_token(authlogin, secret = "", provider = ""):
     # Si c'est un compte local (woofwoof) alors il faut vérifier que la clès du compte existe
@@ -12,7 +13,7 @@ def request_user_info_by_token(authlogin, secret = "", provider = ""):
     elif provider == 'facebook':
         return request_user_info_facebook(authlogin)
     else:
-        return 0
+        raise ErrorException(Error(code=Error_code.NOTIMPL))
 
 def request_user_info_facebook(authlogin):
     http = httplib2.Http()
@@ -70,12 +71,12 @@ def request_user_info_google(authlogin):
         resp, content   = http.request('https://www.googleapis.com/plus/v1/people/me')
 
         if resp.status != 200:
-            return resp.status, "Error while obtaining user profile: \n%s: %s" % resp, content
+            raise ErrorException(Error(code=Error_code.INVGRANT, custom_message=str(content)))
 
         profil = json.loads(content.decode('utf-8'))
         print resp, content
-        return resp.status, profil
+        return profil
     # mauvais token
     except Exception as e:
-        print "exc ", e
-        return 400, e
+        print "RAISE EXCEPTION"
+        raise ErrorException(Error(code=Error_code.INVGRANT))

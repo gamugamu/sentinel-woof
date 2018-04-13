@@ -20,5 +20,11 @@ def curl_cmd():
 
     return output
 
+@route_test.route('/test/a', methods=['GET'])
+def testgf():
+    err = Error(code=Error_code.NO_OP)
+    print "---> ", err
+    return "gfd"
+
 def route(app):
     app.register_blueprint(route_test)

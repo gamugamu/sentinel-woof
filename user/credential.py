@@ -2,6 +2,7 @@
 from flask_sentinel.data import Storage
 from flask import url_for
 import utils.CredentialValidator as credential
+from utils.error import *
 import hashlib
 import requests
 import json
@@ -15,18 +16,17 @@ def internal_url(uri):
 
 def conversion(data):
     # valide que le credential du provider est bon
-    provider        = data.get("provider")
-    code, user_cloud_info = credential.request_user_info_by_token(
-        data.get("authlogin"), data.get("secret"), provider)
-    token           = {}
-    errorMessage    = ""
-    print "convert ?", code, user_cloud_info
+    try:
+        provider        = data.get("provider")
+        user_cloud_info = credential.request_user_info_by_token(data.get("authlogin"), data.get("secret"), provider)
+        token           = {}
+        print "++++ convert ?", user_cloud_info
 
-    if code == 200:
         #TODO user_info doit être similaire entre woofwoof, google, yahoo, et twitter
         user_id     = user_cloud_info["id"]
         user_pass   = hashlib.sha224(user_id).hexdigest()
         # note: _user est privé. Ne pas exposer aux clients.
+        # *** Fait l'authentification côté serveur ***
         _user   = user_from_credential(user_id, user_pass)
         r       = requests.post(internal_url(url_for('access_token')),
                         data = {
@@ -38,8 +38,8 @@ def conversion(data):
         token = json.loads(r.text)
         # le client peut être invalide.
         if "error" in token:
-            token = {}
-            errorMessage = 'cliend_id is invalid'
+            print "∆ error"
+            raise ErrorException(Error(code=Error_code.MALFSCHE, custom_message=token["error"]))
         else:
             print "found token ?", token
             #Les données sont valides,et on peut en tout sécurité créer
@@ -52,13 +52,12 @@ def conversion(data):
             mirrored_petsOwner(sent_id, provider_id)
             #TODO: gestion du scope
             token["scope"] = "user:mutable"
-    # bad credential
-    else:
-        #TODO refactor
-        print "error "
-        errorMessage = 'credential is invalid'
 
-    return token, errorMessage
+    #pass
+    except ErrorException as e:
+        raise e
+
+    return token
 
 def refresh(data):
     print "refresh ", internal_url(url_for('access_token'))
