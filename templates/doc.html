@@ -146,7 +146,6 @@
         require_login     = true
         use               = "Supprime l'utilisateur. Nécessite de se reloger pour avoir une nouvelle session"
       ></step>
-
       <h2>/pets</h2>
       <step red lighten-1
         title             = "List Pets"
@@ -176,8 +175,10 @@
       <step red lighten-1
         title             = "Détail pet"
         method            = "GET"
+        dyn_url           = "true"
         url_root          = {{url_root}}
-        route             = "pet/<pet_name>"
+        route             = "pet/"
+        dyn_url_label     = "pet_name"
         required_bearer   = "true"
         use               = "Retourne un pet en particulier."
         require_login     = true>

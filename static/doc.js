@@ -1,7 +1,7 @@
 
 Vue.component('step', {
   props: ['title', 'method', 'url_root', 'route', 'required_bearer', 'use', 'curl_cmd',
-  'data', 'require_oauth', 'require_login', 'return_id', 'json_return', 'dyn_value'],
+  'data', 'require_oauth', 'require_login', 'return_id', 'json_return', 'dyn_value', 'dyn_url', 'dyn_url_label'],
   template: `
     <div>
       <h5 v-if="title">• {{title}}</h5>
@@ -9,12 +9,12 @@ Vue.component('step', {
       <b class="white-text method" :class="classfromString(method)">{{method}}</b>
           {{url_root}}
       <b class="cyan lighten-5">
-      <b>{{route}}</b>
-      <!--
-      <div class="input-field inline url_input">
-        <input v-bind:id="k" v-model="dyn_value[k]" type="text" v-on:keyup="changeHandler" class="validate url_input">
-      </div>
-      -->
+        {{route}}
+      </b>
+        <div v-if="dyn_url === 'true'" class="input-field inline url_input">
+          <input type="text" id="url_suffix" v-on:keyup="change_urlHandler" class="validate url_input">
+          <label for="url_suffix">{{dyn_url_label}}</label>
+        </div>
       <p><i>{{use}}</i></p>
       <table class="bordered" v-if="this.data != undefined">
        <thead>
@@ -84,6 +84,7 @@ Vue.component('step', {
       return {
           m_json_return: this.json_return,
           loading: false,
+          suffix_url: "",
           dyno_change: {}
       };
   },
@@ -116,14 +117,17 @@ Vue.component('step', {
         cmd += "-X " + this.method + " "
       }
 
-      cmd += this.url_root + this.route;
+      cmd += this.generated_url();
+      console.log(this.generated_url());
 
       return cmd
     },
-
     classfromString(string){
-      console.log("***", string);
       return string
+    },
+    generated_url(){
+      console.log("***", this.suffix_url);
+      return this.url_root + this.route + this.suffix_url;
     },
     pretty_json(format){
       var obj = JSON.parse(format);
@@ -153,6 +157,12 @@ Vue.component('step', {
         this.dyn_value[key] = vl
         this.curl_command = this.curl_command
         this.$forceUpdate()
+    },
+    change_urlHandler: function(event) {
+        // change of userinput, do something
+        //console.log("---> ", event);
+        console.log("***", this.suffix_url);
+        this.suffix_url = event.target.value
     }
   },
 })
@@ -164,7 +174,7 @@ var app = new Vue({
     client_id:  sessionStorage.getItem("client_id")   ? sessionStorage.getItem("client_id")   : "",
     provider:   sessionStorage.getItem("provider")    ? sessionStorage.getItem("provider")    : "",
     auth_login: sessionStorage.getItem("auth_login")  ? sessionStorage.getItem("auth_login")  : "",
-    session_token: sessionStorage.getItem("session_token")  ? sessionStorage.getItem("session_token")  : "",
+    session_token: sessionStorage.getItem("session_token")  ? sessionStorage.getItem("session_token")  : ""
   },
   watch: {
         'client_id': function(val, oldVal){
