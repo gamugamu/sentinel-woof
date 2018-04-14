@@ -38,7 +38,7 @@
         <div class="cyan lighten-5 input-field col s6">
             <i class="indent material-icons prefix orange-text text-darken-3">card_membership</i>
             <input v-model="client_id" type="text" placeholder="Client id" class="validate">
-            <a class="grey darken-3 lighten-1 waves-effect waves-light btn">Je n'ai pas de client-id</a>
+            <a href="oauth/management" class="grey darken-3 lighten-1 waves-effect waves-light btn">Je n'ai pas de client-id</a>
         </div>
         <h6>Récupère directement ton token provider</h6>
         <a class="red lighten-1 waves-effect waves-light btn">
@@ -73,7 +73,7 @@
         route       = "me/oauth"
         use         = "Permet de récupérer un token d'authentification pour les accès personels woof."
         require_oauth = true
-        v-bind:curl_cmd   = "{
+        v-bind:dyn_value   = "{
           'client_id'     : '*client_id',
           'provider'      : '*provider',
           'authlogin'     : '*auth_login',
@@ -84,8 +84,7 @@
           'provider'      : 'le compte sur lequel se logger: google, yahoo, twitter, woof',
           'token'         : 'le token d\'accès fourni par le provider',
           'token_secret'  : '(facultatif) token secret si fourni par le provider (ex twitter)'}"
-          m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;oauth&quot;: { &quot;access_token&quot;: &quot;O9wIOVAXivMIJRDWOCSq2NR8079SAV&quot;, &quot;expires_in&quot;: 3600, &quot;refresh_token&quot;: &quot;2BQQjQR5DNurARHrtXAHLnpFvLgWcs&quot;, &quot;scope&quot;: &quot;&quot;, &quot;token_type&quot;: &quot;Bearer&quot; } }">
-      </step>
+        ></step>
 
       <hr class="style">
     </br>
@@ -106,8 +105,7 @@
         use               = "Renvoie les informations de l'utilisateur."
         return_id         = "return_id"
         require_login     = true
-        m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;me&quot;: { &quot;mail&quot;: null, &quot;name&quot;: null, &quot;seed&quot;: &quot;causal-locust&quot; } }">
-      </step>
+      ></step>
       <step red lighten-1
         title           = ""
         method          = "PUT"
@@ -117,16 +115,12 @@
         use             = "Modifie les informations de l'utilisateur."
         require_login   = true
         v-bind:dyn_value =  "{
-          'name'   : 'dynamo',
-          'mail'   : 'dynamox'}"
-        v-bind:curl_cmd = "{
           'name'   : 'your_name',
           'mail'   : 'your_mail@gmail.com'}"
         v-bind:data = "{
           'name'   : 'Le nom de l\'utilisateur',
           'mail'   : 'Le mail de l\'utilisateur'}"
-        m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;me&quot;: { &quot;mail&quot;:&quot;your_mail@gmail.com&quot;, &quot;name&quot;: &quot;your_name&quot;, &quot;seed&quot;: &quot;causal-locust&quot; } }">
-      </step>
+      ></step>
       <step red lighten-1
         title             = ""
         method            = "DELETE"
@@ -135,8 +129,7 @@
         required_bearer   = "true"
         require_login     = true
         use               = "Supprime l'utilisateur. Nécessite de se reloger pour avoir une nouvelle session"
-        m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;me&quot;: { } }">
-      </step>
+      ></step>
 
       <h2>/pets</h2>
       <step red lighten-1
@@ -146,19 +139,18 @@
         route             = "pets"
         required_bearer   = "true"
         use               = "Retourne la liste des animaux de l'utilisateur"
-        require_login     = true
-        m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;me&quot;: { } }">
+        require_login     = true>
       </step>
       <step red lighten-1
-        title             = ""
+        title             = "Ajout Pet"
         method            = "POST"
         url_root          = {{url_root}}
         route             = "pets"
         required_bearer   = "true"
-        use               = "Rajoute un pet."
-        require_login     = true
-        m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;me&quot;: { } }">
+        use               = "Rajoute un pet"
+        require_login     = true>
       </step>
+
       <h2>/pet</h2>
       <step red lighten-1
         title             = "Détail pet"
@@ -167,8 +159,7 @@
         route             = "pet/<pet_name>"
         required_bearer   = "true"
         use               = "Retourne un pet en particulier."
-        require_login     = true
-        m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;me&quot;: { } }">
+        require_login     = true>
       </step>
       <step red lighten-1
         title             = ""
@@ -177,8 +168,7 @@
         route             = "pet/<pet_name>"
         required_bearer   = "true"
         use               = "Modifie un pet."
-        require_login     = true
-        m_return    = "{ &quot;error&quot;: { &quot;code&quot;: 0, &quot;info&quot;: &quot;success&quot; }, &quot;me&quot;: { } }">
+        require_login     = true>
       </step>
 
         <h2>/#woof-name</h2>

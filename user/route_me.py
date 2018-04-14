@@ -41,27 +41,29 @@ def me_oauth():
 @route_me.route('/me', methods=['GET', 'PUT', 'DELETE'])
 @oauth.require_oauth()
 def me_profil():
-    from storage.models import PetsOwner, delete_n_commit, commit
+    from storage.models import PetsOwner, delete_n_commit, sanitizer, commit
 
-    peto, error = petsOwner_from_session()
-    # • Retourne l'utilisateur actuel.
-    if request.method == 'GET':
-        pass
+    error = Error()
 
-    # • Modifie l'utilisateur.
-    elif request.method == 'PUT':
-        try:
-            data       = request.get_json()
-            sanitized  = schema.validate_me(data)
-            put_sanitized(sanitized, peto)
-            commit()
+    try:
+        peto = petsOwner_from_session()
+        # • Retourne l'utilisateur actuel.
+        if request.method == 'GET':
+            pass
 
-        except ErrorException as e:
-            error = e.error
+        # • Modifie l'utilisateur.
+        elif request.method == 'PUT':
+                data       = request.get_json()
+                sanitized  = schema.validate_me(data)
+                put_sanitized(sanitized, peto)
+                commit()
 
-    # • Supprime l'utilisateur.
-    elif request.method == 'DELETE':
-        delete_n_commit(peto)
-        peto = PetsOwner()
+        # • Supprime l'utilisateur.
+        elif request.method == 'DELETE':
+            delete_n_commit(peto)
+            peto = PetsOwner()
 
-    return jsonify({"error" : error.to_dict(), "me" : peto.sanitized()})
+    except ErrorException as e:
+        error = e.error
+
+    return jsonify({"error" : error.to_dict(), "me" : sanitizer(peto)})

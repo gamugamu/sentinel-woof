@@ -28,7 +28,7 @@ def route_woof_get(seed, _seed, woof):
         error.code  = Error_code.PETNOTFD
         pet         = Pet()
 
-    return jsonify({"error" : error.to_dict(), "woof" : pet.sanitized()})
+    return jsonify({"error" : error.to_dict(), "woof" : sanitizer(pet)})
 
 # Les animaux du petowner. Post pour rajouter.
 @route_woof.route('/pets', methods=['POST', 'GET'])

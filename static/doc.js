@@ -1,7 +1,7 @@
 
 Vue.component('step', {
   props: ['title', 'method', 'url_root', 'route', 'required_bearer', 'use', 'curl_cmd',
-  'data', 'm_return', 'require_oauth', 'require_login', 'return_id', 'json_return', 'dyn_value'],
+  'data', 'require_oauth', 'require_login', 'return_id', 'json_return', 'dyn_value'],
   template: `
     <div>
       <h5 v-if="title">• {{title}}</h5>
@@ -22,9 +22,11 @@ Vue.component('step', {
           <td>{{v}}</td>
           <td v-if="dyn_value !== undefined && k in dyn_value" >
             <div class="input-field dyno_value">
-              <input v-model="dyn_value[k]" v-bind:id="k" type="text" class="validate">
-              <label v-bind:for="k">{{k}}</label>
+              <input v-bind:id="k" v-model="dyn_value[k]" type="text" v-on:keyup="changeHandler" class="validate">
+              <label v-bind:for="k"></label>
             </div>
+            <p>{{k}}</p>
+
           </td>
        </tr>
        </tbody>
@@ -38,9 +40,8 @@ Vue.component('step', {
           </tbody>
         </table>
 
-      <pre><code class="language-bash line-numbers">{{curl_command}}</code></pre>
+      <pre><code class="language-bash line-numbers">{{curl_command()}}</code></pre>
       <div>
-        <h5>Return</h5>
           <div v-show="loading" class="progress">
             <div class="indeterminate"></div>
           </div>
@@ -62,42 +63,6 @@ Vue.component('step', {
       </div>
     </div>
   `,computed: {
-    // un accesseur (getter) calculé
-    curl_command: {
-      get: function () {
-      // `this` pointe sur l'instance vm
-      var cmd = "curl -i -H \"Content-Type: application/json\" "
-      if (this.required_bearer == "true"){
-          cmd += '-i -H "Authorization: Bearer ' + this.$parent.session_token + '" '
-      }
-
-      if (this.curl_cmd != undefined){
-        cmd += "-X " + this.method + " -d '{"
-
-        for(var key in this.curl_cmd){
-          var value = this.curl_cmd[key]
-
-          if ( value.charAt(0) == '*' ) {
-            k = value.substr(1, value.lenght);
-            v = typeof this.$parent._data[k] !== 'undefined' ? this.$parent._data[k] : ""
-
-            cmd += "\"" + key + "\":" + "\"" + v +  "\", "
-          }else{
-            cmd += "\"" + key + "\":" + "\"" + value +  "\", "
-          }
-        }
-        cmd = cmd.slice(0, -2); // ', '
-        cmd += "}' "
-      }else if(this.method != "GET"){
-        cmd += "-X " + this.method + " "
-      }
-
-      this.m_json_return = "\n" + this.pretty_json(this.m_return)
-      cmd += this.url_root + this.route;
-
-      return cmd
-      }
-    },
     can_test_oauth:{
         get: function () {
           return  this.$parent.client_id.length != 0 &&
@@ -114,10 +79,44 @@ Vue.component('step', {
   data: function () {
       return {
           m_json_return: this.json_return,
-          loading: false
+          loading: false,
+          dyno_change: {}
       };
   },
   methods: {
+    curl_command() {
+      // `this` pointe sur l'instance vm
+      var cmd = "curl -i -H \"Content-Type: application/json\" "
+      if (this.required_bearer == "true"){
+          cmd += '-i -H "Authorization: Bearer ' + this.$parent.session_token + '" '
+      }
+
+      if (this.dyn_value != undefined){
+        cmd += "-X " + this.method + " -d '{"
+
+        for(var key in this.dyn_value){
+          var value = this.dyn_value[key]
+
+          if ( value.charAt(0) == '*' ) {
+            k = value.substr(1, value.lenght);
+            v = typeof this.$parent._data[k] !== 'undefined' ? this.$parent._data[k] : ""
+
+            cmd += "\"" + key + "\":" + "\"" + v +  "\", "
+          }else{
+            cmd += "\"" + key + "\":" + "\"" + value +  "\", "
+          }
+        }
+        cmd = cmd.slice(0, -2); // ', '
+        cmd += "}' "
+      }else if(this.method != "GET"){
+        cmd += "-X " + this.method + " "
+      }
+
+      cmd += this.url_root + this.route;
+
+      return cmd
+    },
+
     pretty_json(format){
       var obj = JSON.parse(format);
       obj     = JSON.stringify(obj, undefined, 2);
@@ -128,19 +127,31 @@ Vue.component('step', {
       _this.loading = true
 
       axios.post('/test/curl_cmd', {
-        command: this.curl_command
+        command: this.curl_command()
       })
       .then(function (response) {
         _this.m_json_return = "\n" + response.data
         _this.loading = false
+        console.log("result ", _this.m_json_return);
       })
       .catch(function (error) {
         console.log(error);
         _this.m_json_return = error
         _this.loading = false
       });
+    },
+    changeHandler: function(event) {
+        // change of userinput, do something
+        console.log("target ", event.target.id, event.target.value);
+        var key = event.target.id
+        var vl  = event.target.value
+        this.dyn_value[key] = vl
+        this.curl_command = this.curl_command
+        this.$forceUpdate()
+
+        console.log("*** setted", this.curl_command);
     }
-  }
+  },
 })
 
 var app = new Vue({
