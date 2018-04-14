@@ -55,6 +55,24 @@ hr.style {
 
 .method{
   padding: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.GET{
+  background-color: LightSeaGreen;
+}
+
+.PUT{
+  background-color: PaleVioletRed;
+}
+
+.POST{
+  background-color: GoldenRod;
+}
+
+.DELETE{
+  background-color: SteelBlue;
 }
 
 .return{

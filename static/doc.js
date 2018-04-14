@@ -6,7 +6,7 @@ Vue.component('step', {
     <div>
       <h5 v-if="title">• {{title}}</h5>
       <h5 v-else></br></h5>
-      <b class="orange darken-3 white-text method">{{method}}</b> {{url_root}}<b class="cyan lighten-5">{{route}}</b></route>
+      <b class="white-text method" :class="classfromString(method)">{{method}}</b> {{url_root}}<b class="cyan lighten-5">{{route}}</b></route>
       <p><i>{{use}}</i></p>
       <table class="bordered" v-if="this.data != undefined">
        <thead>
@@ -20,13 +20,10 @@ Vue.component('step', {
        <tr v-for="(v, k) in data">
           <th>{{k}}</th>
           <td>{{v}}</td>
-          <td v-if="dyn_value !== undefined && k in dyn_value" >
+          <td v-if="dyn_value !== undefined && k in dyn_value && dyn_value[k][0] !== '*'">
             <div class="input-field dyno_value">
               <input v-bind:id="k" v-model="dyn_value[k]" type="text" v-on:keyup="changeHandler" class="validate">
-              <label v-bind:for="k"></label>
             </div>
-            <p>{{k}}</p>
-
           </td>
        </tr>
        </tbody>
@@ -35,7 +32,6 @@ Vue.component('step', {
        <table class="bordered" v-if="this.dyn_value != undefined">
           <tbody>
             <tr v-for="(v, k) in data">
-
             </tr>
           </tbody>
         </table>
@@ -117,6 +113,10 @@ Vue.component('step', {
       return cmd
     },
 
+    classfromString(string){
+      console.log("***", string);
+      return string
+    },
     pretty_json(format){
       var obj = JSON.parse(format);
       obj     = JSON.stringify(obj, undefined, 2);
@@ -132,24 +132,19 @@ Vue.component('step', {
       .then(function (response) {
         _this.m_json_return = "\n" + response.data
         _this.loading = false
-        console.log("result ", _this.m_json_return);
       })
       .catch(function (error) {
-        console.log(error);
         _this.m_json_return = error
         _this.loading = false
       });
     },
     changeHandler: function(event) {
         // change of userinput, do something
-        console.log("target ", event.target.id, event.target.value);
         var key = event.target.id
         var vl  = event.target.value
         this.dyn_value[key] = vl
         this.curl_command = this.curl_command
         this.$forceUpdate()
-
-        console.log("*** setted", this.curl_command);
     }
   },
 })

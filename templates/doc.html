@@ -83,8 +83,24 @@
           'client_id'     : 'Le client id secret reçu par l\'administrateur',
           'provider'      : 'le compte sur lequel se logger: google, yahoo, twitter, woof',
           'token'         : 'le token d\'accès fourni par le provider',
-          'token_secret'  : '(facultatif) token secret si fourni par le provider (ex twitter)'}"
-        ></step>
+          'token_secret'  : '(facultatif) token secret si fourni par le provider (ex twitter)'}">
+      </step>
+
+      <step red lighten-1
+        title       = "Refresh Token"
+        method      = "POST"
+        url_root    = {{url_root}}
+        route       = "me/oauth"
+        use         = "Permet de récupérer un token d'authentification pour les accès personels woof."
+        require_oauth = true
+        v-bind:dyn_value   = "{
+          'client_id'     : '*client_id',
+          'refresh_token' : ''
+        }"
+        v-bind:data = "{
+          'client_id'     : 'Le client id secret reçu par l\'administrateur',
+          'refresh_token'  : 'le token d\'accès fourni par le provider'}">
+      </step>
 
       <hr class="style">
     </br>
@@ -148,7 +164,12 @@
         route             = "pets"
         required_bearer   = "true"
         use               = "Rajoute un pet"
-        require_login     = true>
+        require_login     = true
+        v-bind:dyn_value   = "{
+          'name' : ''
+        }"
+        v-bind:data = "{
+          'name'     : 'Le nom du chien. !Doublon.'}">>
       </step>
 
       <h2>/pet</h2>
