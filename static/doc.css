@@ -93,6 +93,10 @@ pre {
   margin-bottom: 20px;
 }
 
+.url_input{
+    padding-top: 15px;
+}
+
 .indent{
   padding-left: 5px;
 }

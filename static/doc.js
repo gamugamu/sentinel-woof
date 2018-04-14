@@ -6,7 +6,15 @@ Vue.component('step', {
     <div>
       <h5 v-if="title">• {{title}}</h5>
       <h5 v-else></br></h5>
-      <b class="white-text method" :class="classfromString(method)">{{method}}</b> {{url_root}}<b class="cyan lighten-5">{{route}}</b></route>
+      <b class="white-text method" :class="classfromString(method)">{{method}}</b>
+          {{url_root}}
+      <b class="cyan lighten-5">
+      <b>{{route}}</b>
+      <!--
+      <div class="input-field inline url_input">
+        <input v-bind:id="k" v-model="dyn_value[k]" type="text" v-on:keyup="changeHandler" class="validate url_input">
+      </div>
+      -->
       <p><i>{{use}}</i></p>
       <table class="bordered" v-if="this.data != undefined">
        <thead>
