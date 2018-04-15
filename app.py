@@ -36,6 +36,8 @@ def handle_invalid_usage(error):
 
 @app.route('/')
 def home():
+    from user.credential import internal_url
+
     return render_template('doc.html', url_root= url_for('home', _external=True))
 
 if __name__ == '__main__':

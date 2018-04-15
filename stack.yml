@@ -31,7 +31,7 @@ services:
 
 
   woofapi:
-    image: cryptodraco/sentinel-dev:v0.0.7
+    image: cryptodraco/sentinel-dev:v0.0.8
     container_name: "waf-api"
     hostname: woofapi
     restart: always

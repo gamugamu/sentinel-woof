@@ -1,6 +1,6 @@
 
 Vue.component('step', {
-  props: ['title', 'method', 'url_root', 'route', 'required_bearer', 'use', 'curl_cmd',
+  props: ['title', 'method', 'url_root', 'internal_url', 'route', 'required_bearer', 'use', 'curl_cmd',
   'data', 'require_oauth', 'require_login', 'return_id', 'json_return', 'dyn_value', 'dyn_url', 'dyn_url_label'],
   template: `
     <div>
@@ -134,16 +134,20 @@ Vue.component('step', {
     call_curl_cmd(cmd){
       _this         = this
       _this.loading = true
-
-      axios.post('/test/curl_cmd', {
+      console.log("internal ", this.url_root);
+      var int_url   = this.url_root
+      console.log("---> ", int_url + 'test/curl_cmd');
+      axios.post(int_url + 'test/curl_cmd', {
         command: this.curl_command()
       })
       .then(function (response) {
         _this.m_json_return = "\n" + response.data
+        console.log("response", response, "data: ", response.data);
         _this.loading = false
       })
       .catch(function (error) {
         _this.m_json_return = error
+        console.log("error:", error);
         _this.loading = false
       });
     },
@@ -165,6 +169,7 @@ Vue.component('step', {
 var app = new Vue({
   el: '#app',
   delimiters: ['${', '}'],
+  props: ['internal_url'],
   data:{
     client_id:  sessionStorage.getItem("client_id")   ? sessionStorage.getItem("client_id")   : "",
     provider:   sessionStorage.getItem("provider")    ? sessionStorage.getItem("provider")    : "",
