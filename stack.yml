@@ -41,6 +41,7 @@ services:
     #      - woofapi
     environment:
       - NUC=1 #environement de dev
+      - NEED_HTTPS_FOR=wannanosuurus
       - INTERNAL_URL=http://woofapi:8080 #doit mapper hostname + port externe
     links:
       - db

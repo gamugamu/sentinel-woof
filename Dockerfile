@@ -6,7 +6,7 @@ ENV VIRTUAL_ENV /env
 ENV PATH /env/bin:$PATH
 
 # redis, mongo and postgreport
-EXPOSE 6379 27017 5432 5002
+EXPOSE 6379 27017 5432
 
 # Install prerequisites
 RUN apt-get update && apt-get install -y curl

@@ -38,7 +38,10 @@ def handle_invalid_usage(error):
 def home():
     from user.credential import internal_url
 
-    return render_template('doc.html', url_root= url_for('home', _external=True))
+    print "*---> ", request.host_url, "localhost" in request.host_url or "0.0.0.0" in request.host_url
+
+    is_local_host = "localhost" in request.host_url or "0.0.0.0" in request.host_url
+    return render_template('doc.html', url_root= url_for('home', _external=True, _scheme='http' if is_local_host else 'https'))
 
 if __name__ == '__main__':
     app.run(ssl_context='adhoc')
