@@ -12,8 +12,7 @@ Vue.component('step', {
         {{route}}
       </b>
         <div v-if="dyn_url === 'true'" class="input-field inline url_input">
-          <input type="text" id="url_suffix" v-on:keyup="change_urlHandler" class="validate url_input">
-          <label for="url_suffix">{{dyn_url_label}}</label>
+          <input type="text" id="url_suffix" v-on:keyup="change_urlHandler" v-bind:placeholder="dyn_url_label" class="validate url_input">
         </div>
       <p><i>{{use}}</i></p>
       <table class="bordered" v-if="this.data != undefined">
@@ -30,7 +29,7 @@ Vue.component('step', {
           <td>{{v}}</td>
           <td v-if="dyn_value !== undefined && k in dyn_value && dyn_value[k][0] !== '*'">
             <div class="input-field dyno_value">
-              <input v-bind:id="k" v-model="dyn_value[k]" type="text" v-on:keyup="changeHandler" class="validate">
+              <input v-bind:id="k" v-bind:placeholder="dyn_value[k]" type="text" v-on:keyup="changeHandler" class="validate">
             </div>
           </td>
        </tr>
@@ -118,7 +117,6 @@ Vue.component('step', {
       }
 
       cmd += this.generated_url();
-      console.log(this.generated_url());
 
       return cmd
     },
@@ -126,7 +124,6 @@ Vue.component('step', {
       return string
     },
     generated_url(){
-      console.log("***", this.suffix_url);
       return this.url_root + this.route + this.suffix_url;
     },
     pretty_json(format){
@@ -160,8 +157,6 @@ Vue.component('step', {
     },
     change_urlHandler: function(event) {
         // change of userinput, do something
-        //console.log("---> ", event);
-        console.log("***", this.suffix_url);
         this.suffix_url = event.target.value
     }
   },

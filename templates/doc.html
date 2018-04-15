@@ -176,9 +176,9 @@
         title             = "Détail pet"
         method            = "GET"
         dyn_url           = "true"
+        dyn_url_label     = "pet_name"
         url_root          = {{url_root}}
         route             = "pet/"
-        dyn_url_label     = "pet_name"
         required_bearer   = "true"
         use               = "Retourne un pet en particulier."
         require_login     = true>
@@ -186,10 +186,18 @@
       <step red lighten-1
         title             = ""
         method            = "PUT"
+        dyn_url           = "true"
+        dyn_url_label     = "pet_name"
         url_root          = {{url_root}}
-        route             = "pet/<pet_name>"
+        route             = "pet/"
         required_bearer   = "true"
         use               = "Modifie un pet."
+        v-bind:dyn_value  =  "{
+          'name'   : 'pet_name'
+        }"
+        v-bind:data = "{
+            'name'   : 'Le nom du pet'
+        }"
         require_login     = true>
       </step>
 

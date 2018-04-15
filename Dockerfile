@@ -9,8 +9,6 @@ ENV PATH /env/bin:$PATH
 EXPOSE 6379 27017 5432
 
 # Install prerequisites
-RUN apt-get update && apt-get install -y curl
-
 ADD requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt
 
