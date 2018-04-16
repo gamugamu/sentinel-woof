@@ -25,10 +25,12 @@ itsdangerous==0.24
 Jinja2==2.10
 Mako==1.0.7
 MarkupSafe==1.0
+minio==3.0.4
 oauth2client==4.1.2
 oauthlib==2.0.7
 pathtools==0.1.2
 petname==2.2
+Pillow==5.1.0
 psycopg2==2.7.4
 psycopg2-binary==2.7.4
 pyasn1==0.4.2
@@ -38,6 +40,7 @@ pymongo==3.6.1
 pyOpenSSL==17.5.0
 python-dateutil==2.7.2
 python-editor==1.0.3
+pytz==2018.4
 PyYAML==3.12
 redis==2.10.6
 requests==2.18.4

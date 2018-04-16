@@ -9,6 +9,9 @@ from utils.error import *
 
 BASE_URL    = "http://localhost:9000/"
 minioClient = None
+minioACCESS = "AKIAIOSFODNN7EXAMPLE"
+minioSECRET = "SECRETSECRET"
+
 MAX_BADGE_SIZE = 50000 # la taille de l'image max pour le badge. 50k max
 
 # note: Minio genere un etag (md5) pour chaque image. Et permet de prevenir tout type de doublon
@@ -68,8 +71,8 @@ def bucket_setup(base_url):
     BASE_URL = base_url
 
     minioClient = Minio('localhost:9000',
-                      access_key='SVUSVOZDI3K0MG9USHCF',
-                      secret_key='J5DvPQhqmL+u8Wm513ZlUlfsdqTSB+6ZkCzdTurh',
+                      access_key=minioACCESS,
+                      secret_key=minioSECRET,
                       secure=False)
 
     # Make a bucket with the make_bucket API call.
