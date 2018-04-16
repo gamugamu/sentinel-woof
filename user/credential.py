@@ -11,8 +11,11 @@ from os import environ
 
 def internal_url(uri):
     #TODO, be static
+    if uri.startswith('/'):
+        uri = uri[1:]
+
     external_url  = environ.get('INTERNAL_URL')
-    url           = (external_url + uri) if external_url is not None else url_for('access_token', _external=True)
+    url           = (external_url if external_url is not None else url_for('home', _external=True)) + uri
     return url
 
 def conversion(data):

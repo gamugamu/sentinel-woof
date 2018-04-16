@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
-
+from flask import request
 from minio import Minio
 from minio.error import ResponseError
 from minio.error import (ResponseError, BucketAlreadyOwnedByYou,
                          BucketAlreadyExists)
 import os
+from utils.error import *
+
+BASE_URL    = "http://localhost:9000/"
+minioClient = None
+MAX_BADGE_SIZE = 50000 # la taille de l'image max pour le badge. 50k max
 
 # note: Minio genere un etag (md5) pour chaque image. Et permet de prevenir tout type de doublon
 # (images). Le problème c'est qu'il le calcul après avoir uploadé l'image, or on en a besoin avant
@@ -24,53 +29,65 @@ def size(file):
     file.seek(0)
     return size
 
-print "imported"
-minioClient = Minio('localhost:9000',
-                  access_key='SVUSVOZDI3K0MG9USHCF',
-                  secret_key='J5DvPQhqmL+u8Wm513ZlUlfsdqTSB+6ZkCzdTurh',
-                  secure=False)
-
-
-print "minio client **"
-
+def url_fromFileName(fileName, bucketName):
+    return BASE_URL + bucketName + '/' + fileName
 
 def upload_file(file, bucketName=""):
-    file_size   = size(file)
-    hex_name    = md5(file)
+    from PIL import Image
+    from io import BytesIO
+
+    #TODO, type plutôt que bucketName
+    #SWITCH
+    img     = Image.open(file)
+    byte_io = BytesIO()
+    #TODO externalise size
+    img.thumbnail((120, 120), Image.ANTIALIAS)
+    img.save(byte_io, "JPEG")
+    # rembobinage
+    byte_io.seek(0)
+
+    file_size = size(byte_io)
+    hex_name  = md5(byte_io)
 
     try:
         ext        = os.path.splitext(file.filename)[1]
         full_name  = hex_name + ext
 
-        tag = minioClient.put_object(bucketName, full_name, file,
+        tag = minioClient.put_object(bucketName, full_name, byte_io,
             length          = file_size,
             content_type    = file.content_type)
 
-        return full_name
+        return url_fromFileName(full_name, bucketName)
 
     except ResponseError as err:
+        #TODO error
         raise
 
-def setup():
+def bucket_setup(base_url):
+    global BASE_URL, minioClient
+    BASE_URL = base_url
+
+    minioClient = Minio('localhost:9000',
+                      access_key='SVUSVOZDI3K0MG9USHCF',
+                      secret_key='J5DvPQhqmL+u8Wm513ZlUlfsdqTSB+6ZkCzdTurh',
+                      secure=False)
+
+    # Make a bucket with the make_bucket API call.
+    setup_bucket("badges")
+    setup_bucket("feeds")
+
+
+def setup_bucket(bucketName):
         # Make a bucket with the make_bucket API call.
     try:
-        minioClient.make_bucket("badges")
-        print "make bucker"
+        minioClient.make_bucket(bucketName)
+        minioClient.set_bucket_policy(bucketName,
+                              '*',
+                              Policy.READ_WRITE)
     except BucketAlreadyOwnedByYou as err:
-        print "BucketAlreadyOwnedByYou"
         pass
     except BucketAlreadyExists as err:
-        print "BucketAlreadyExists"
         pass
+
     except ResponseError as err:
         raise
-
-    try:
-        print "try upload"
-        file_stat = os.stat('static/img/logo.png')
-        file_data = open('static/img/logo.png', 'rb')
-        print "file_data", file_data
-        print(minioClient.put_object('badges', 'myobject', file_data, file_stat.st_size))
-        print "done"
-    except ResponseError as err:
-        print(err)

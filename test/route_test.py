@@ -25,7 +25,7 @@ def curl_cmd():
     print "*** called command: ", cmd
     cmd += " -s" # silent progress bar
     status, output = commands.getstatusoutput(cmd)
-
+    print "output? ", output
     return output
 
 @route_test.route('/test/a', methods=['GET'])

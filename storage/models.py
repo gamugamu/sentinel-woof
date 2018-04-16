@@ -141,5 +141,6 @@ class Pet(OutputMixin, db.Model):
     __tablename__   = 'pet'
     id              = Column(Integer, primary_key=True)
     name            = Column(String(20))
+    url_badge       = Column(String(150))
     woof_name       = Column(String(41))
     _petowner_id    = db.Column(db.Integer, db.ForeignKey('petsowner.id'))

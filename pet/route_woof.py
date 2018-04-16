@@ -7,6 +7,7 @@ from flask_sentinel import oauth
 from werkzeug.routing import BaseConverter
 from utils.error import *
 from utils.UserHelper import petsOwner_from_session
+from images_upload.uploader import bucket_setup
 
 route_woof = Blueprint('route_woof', __name__, template_folder='templates')
 
@@ -89,6 +90,30 @@ def route_woof_put(pet_name):
         pet   = {}
 
     return jsonify({"error" : error.to_dict(), "woof" : sanitizer(pet)})
+
+@route_woof.route('/badge/<pet_name>', methods=['GET', 'PUT'])
+@oauth.require_oauth()
+def pet_badge(pet_name):
+    from images_upload.uploader import upload_file
+    from utils.PetsHelper import query_from_pet_name
+    from storage.models import commit, sanitizer
+
+    error   = Error()
+    pet     = {}
+
+    try:
+        peto = petsOwner_from_session()
+        pet  = query_from_pet_name(peto, pet_name)
+        path = upload_file(request.files["file"], bucketName="badges")
+        pet.url_badge = path
+        print "path: ", path
+        commit()
+
+    except ErrorException as e:
+        error = e.error
+
+    return jsonify({"error" : error.to_dict(), "woof" : sanitizer(pet)})
+
 
 def route(app):
     app.url_map.converters['regex'] = RegexConverter

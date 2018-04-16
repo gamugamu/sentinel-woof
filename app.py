@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, url_for
 from flask_sentinel import ResourceOwnerPasswordCredentials
 from user.route_me import route_me
 from utils.TokenBearer import InvalidUsage
+from images_upload.uploader import bucket_setup
 from pet.route_woof import route as pet_route
 from test.route_test import route as test_route
 from os import environ
@@ -25,9 +26,10 @@ pet_route(app)
 test_route(app)
 #TODO refactor
 app.register_blueprint(route_me)
-
 ResourceOwnerPasswordCredentials(app)
-
+# bucket
+print "environ ",  environ.get('BUCKET_BASE_URL')
+bucket_setup(base_url=environ.get('BUCKET_BASE_URL'))
 
 @app.errorhandler(InvalidUsage)
 def handle_invalid_usage(error):
@@ -38,19 +40,9 @@ def handle_invalid_usage(error):
 @app.route('/')
 def home():
     from user.credential import internal_url
-
-    print "*---> ", request.host_url, "localhost" in request.host_url or "0.0.0.0" in request.host_url
-
+    #TODO refactor
     is_local_host = "localhost" in request.host_url or "0.0.0.0" in request.host_url
     return render_template('doc.html', url_root= url_for('home', _external=True, _scheme='http' if is_local_host else 'https'))
-
-@app.route('/miniotest', methods=['POST', 'GET'])
-def minio_test():
-    from images_upload.uploader import upload_file
-    print "**** file ", request.files["file"]
-    uuid = upload_file(request.files["file"], bucketName="badges")
-
-    return "minio_test"
 
 if __name__ == '__main__':
     app.run(ssl_context='adhoc')

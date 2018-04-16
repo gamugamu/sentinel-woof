@@ -11,6 +11,7 @@ class Error_code(Enum):
     PETNAMEEX   = 110
     PETMAXLIM   = 111
     NOTIMPL     = 150
+    BAETOOLARG  = 180
 
 info_error = {
     Error_code.NO_OP        : "Nothing Happened",
@@ -21,8 +22,8 @@ info_error = {
     Error_code.MALFSCHE     : "Schema invalide",
     Error_code.PETNAMEEX    : "Nom invalide. (Doublon)",
     Error_code.PETMAXLIM    : "Limite de creation de pets atteint",
-    Error_code.NOTIMPL      : "Fonction non implémentée"
-
+    Error_code.NOTIMPL      : "Fonction non implémentée",
+    Error_code.BAETOOLARG   : "Badge trop large"
 }
 
 class ErrorException(Exception):
