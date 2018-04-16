@@ -144,3 +144,11 @@ class Pet(OutputMixin, db.Model):
     url_badge       = Column(String(150))
     woof_name       = Column(String(41))
     _petowner_id    = db.Column(db.Integer, db.ForeignKey('petsowner.id'))
+    feeds           = relationship("Feed", backref='pet', cascade="all, delete-orphan")
+
+class Feed(OutputMixin, db.Model):
+    __tablename__   = 'feed'
+    id              = Column(Integer, primary_key=True)
+    url_feed        = Column(String(150))
+    comment         = Column(String(41))
+    _pet_id         = db.Column(db.Integer, db.ForeignKey('pet.id'))

@@ -91,7 +91,7 @@ def route_woof_put(pet_name):
 
     return jsonify({"error" : error.to_dict(), "woof" : sanitizer(pet)})
 
-@route_woof.route('/badge/<pet_name>', methods=['GET', 'PUT'])
+@route_woof.route('/pet/badge/<pet_name>', methods=['GET', 'PUT'])
 @oauth.require_oauth()
 def pet_badge(pet_name):
     from images_upload.uploader import upload_file
@@ -104,9 +104,9 @@ def pet_badge(pet_name):
     try:
         peto = petsOwner_from_session()
         pet  = query_from_pet_name(peto, pet_name)
+        #TODO validation
         path = upload_file(request.files["file"], bucketName="badges")
         pet.url_badge = path
-        print "path: ", path
         commit()
 
     except ErrorException as e:
@@ -114,6 +114,42 @@ def pet_badge(pet_name):
 
     return jsonify({"error" : error.to_dict(), "woof" : sanitizer(pet)})
 
+route_feed = Blueprint('route_woof', __name__, template_folder='templates')
+
+# FEED
+@route_woof.route('/pet/feeds/<pet_name>', methods=['GET', 'POST'])
+@oauth.require_oauth()
+def feeds(pet_name):
+    from images_upload.uploader import upload_file
+    from utils.PetsHelper import query_from_pet_name, new_feed
+
+    from storage.models import commit, sanitized_collection
+
+    error   = Error()
+    feeds   = {}
+
+    try:
+        peto = petsOwner_from_session()
+        pet  = query_from_pet_name(peto, pet_name)
+        print "pet ", pet, pet.feeds
+
+        if request.method == 'GET':
+            feeds   = pet.feeds
+
+
+        elif request.method == 'POST':
+            data    = request.files
+            feed    = new_feed(pet)
+            feeds   = pet.feeds
+            print "new feed? ", feed, pet.to_dict()
+            #sanitized = schema.validate_pet(data)
+            #put_from_sanitized(sanitized, pet, peto)
+            commit()
+
+    except ErrorException as e:
+        error = e.error
+
+    return jsonify({"error" : error.to_dict(), "feeds" : sanitized_collection(feeds)})
 
 def route(app):
     app.url_map.converters['regex'] = RegexConverter

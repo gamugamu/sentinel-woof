@@ -5,7 +5,7 @@ from utils.Sanitizer import put_sanitized
 MAX_PET = 20
 
 def new_pet(peto):
-    from storage.models import PetsOwner, Pet, add_n_commit
+    from storage.models import PetsOwner, Pet
     pet = {}
 
     if peto is not None:
@@ -22,6 +22,15 @@ def new_pet(peto):
         raise ErrorException(error)
 
     return pet
+
+def new_feed(pet):
+    from storage.models import Pet, Feed
+
+    feed = Feed()
+    feed.comment = "un comment***"
+    pet.feeds.append(feed)
+
+    return feed
 
 def put_from_sanitized(dict, pet, peto):
     from storage.models import Pet, commit
