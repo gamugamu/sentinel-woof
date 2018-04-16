@@ -7,6 +7,7 @@ from pet.route_woof import route as pet_route
 from test.route_test import route as test_route
 from os import environ
 
+
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
@@ -42,6 +43,14 @@ def home():
 
     is_local_host = "localhost" in request.host_url or "0.0.0.0" in request.host_url
     return render_template('doc.html', url_root= url_for('home', _external=True, _scheme='http' if is_local_host else 'https'))
+
+@app.route('/miniotest', methods=['POST', 'GET'])
+def minio_test():
+    from images_upload.uploader import upload_file
+    print "**** file ", request.files["file"]
+    uuid = upload_file(request.files["file"], bucketName="badges")
+
+    return "minio_test"
 
 if __name__ == '__main__':
     app.run(ssl_context='adhoc')
