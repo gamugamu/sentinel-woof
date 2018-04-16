@@ -33,6 +33,9 @@ docker cp woof-backup.xz waf-postgres:/woof-backup.xz
 #Utiliser docker-compose:
 docker-compose -f stack.yml up
 
+#minio
+docker pull minio/minio
+docker run -e "MINIO_ACCESS_KEY=AKIAIOSFODNN7EXAMPLE" -e "MINIO_SECRET_KEY=SECRETSECRET" -p 9000:9000 minio/minio server /data
 
 K3tNre9SVrgTue88eG36w642BRwiF5
 # GET

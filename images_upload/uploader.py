@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import request
 from minio import Minio
+from minio.policy import Policy
 from minio.error import ResponseError
 from minio.error import (ResponseError, BucketAlreadyOwnedByYou,
                          BucketAlreadyExists)
@@ -13,6 +14,12 @@ minioACCESS = "AKIAIOSFODNN7EXAMPLE"
 minioSECRET = "SECRETSECRET"
 
 MAX_BADGE_SIZE = 50000 # la taille de l'image max pour le badge. 50k max
+MAX_BADGE_WIDTH_HEIGTH  = 120 # la taille de l'image max pour le badge. 50k max
+MAX_FEED_WIDTH_HEIGTH   = 550 # la taille de l'image max pour le badge. 50k max
+
+class Bucket(Enum):
+    BADGE = "badge"
+    FEEDS = "feeds"
 
 # note: Minio genere un etag (md5) pour chaque image. Et permet de prevenir tout type de doublon
 # (images). Le problème c'est qu'il le calcul après avoir uploadé l'image, or on en a besoin avant
@@ -39,12 +46,13 @@ def upload_file(file, bucketName=""):
     from PIL import Image
     from io import BytesIO
 
-    #TODO, type plutôt que bucketName
-    #SWITCH
     img     = Image.open(file)
     byte_io = BytesIO()
-    #TODO externalise size
-    img.thumbnail((120, 120), Image.ANTIALIAS)
+
+    ratio = {   Bucket.BADGE.value : MAX_BADGE_WIDTH_HEIGTH,
+                Bucket.FEEDS.value : MAX_FEED_WIDTH_HEIGTH}
+
+    img.thumbnail((ratio[bucketName], ratio[bucketName]), Image.ANTIALIAS)
     img.save(byte_io, "JPEG")
     # rembobinage
     byte_io.seek(0)
@@ -68,7 +76,8 @@ def upload_file(file, bucketName=""):
 
 def bucket_setup(base_url):
     global BASE_URL, minioClient
-    BASE_URL = base_url
+    if base_url is not None:
+        BASE_URL = base_url
 
     minioClient = Minio('localhost:9000',
                       access_key=minioACCESS,
@@ -76,8 +85,8 @@ def bucket_setup(base_url):
                       secure=False)
 
     # Make a bucket with the make_bucket API call.
-    setup_bucket("badges")
-    setup_bucket("feeds")
+    setup_bucket(Bucket.BADGE.value)
+    setup_bucket(Bucket.FEEDS.value)
 
 
 def setup_bucket(bucketName):

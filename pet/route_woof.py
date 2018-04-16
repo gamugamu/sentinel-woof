@@ -7,7 +7,7 @@ from flask_sentinel import oauth
 from werkzeug.routing import BaseConverter
 from utils.error import *
 from utils.UserHelper import petsOwner_from_session
-from images_upload.uploader import bucket_setup
+from images_upload.uploader import bucket_setup, Bucket
 
 route_woof = Blueprint('route_woof', __name__, template_folder='templates')
 
@@ -81,9 +81,9 @@ def pets_badge(pet_name):
         if request.method == 'GET':
             pass
 
-        elif request.method == 'PUT':            
+        elif request.method == 'PUT':
             #TODO validation
-            path = upload_file(request.files["file"], bucketName="badges")
+            path = upload_file(request.files["image"], bucketName=Bucket.BADGE.value)
             pet.url_badge = path
             commit()
 
@@ -133,7 +133,7 @@ def pets_feeds(pet_name):
 
     error   = Error()
     feeds   = {}
-
+    print "FEED"
     try:
         peto = petsOwner_from_session()
         pet  = query_from_pet_name(peto, pet_name)
@@ -142,17 +142,20 @@ def pets_feeds(pet_name):
         if request.method == 'GET':
             feeds   = pet.feeds
 
-
         elif request.method == 'POST':
             data    = request.files
             feed    = new_feed(pet)
             feeds   = pet.feeds
-            print "new feed? ", feed, pet.to_dict()
+            print "DDDD ", request.files
+            path    = upload_file(request.files["image"], bucketName=Bucket.FEEDS.value)
+            feed.url_feed = path
+            print "new feed? ", path
             #sanitized = schema.validate_pet(data)
             #put_from_sanitized(sanitized, pet, peto)
             commit()
 
     except ErrorException as e:
+        print "error", e
         error = e.error
 
     return jsonify({"error" : error.to_dict(), "feeds" : sanitized_collection(feeds)})
