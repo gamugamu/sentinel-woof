@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask_sentinel.data import Storage
-from utils.error import Error, Error_code
+from utils.error import *
 
 #from utils import TokenBearer
 

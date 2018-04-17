@@ -144,6 +144,7 @@ def pets_feeds(pet_name, current_page):
         if request.method == 'GET':
             #TODO refactor
             try:
+                print "PET ID ", pet.id
                 _pages = Feed.query.filter(and_(Feed._pet_id == pet.id)).paginate(page=int(current_page), per_page=10)
                 feeds = _pages.items
                 #TODO refactor!
@@ -159,6 +160,7 @@ def pets_feeds(pet_name, current_page):
             # sanitize
             sanitized["url_feed"] = path
             del sanitized["image"]
+            print "CREATED: PET ID ", feed._pet_id
 
             put_sanitized(sanitized, feed)
             commit()

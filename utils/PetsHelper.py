@@ -25,9 +25,11 @@ def new_pet(peto):
 
 def new_feed(pet):
     from storage.models import Pet, Feed
+    from datetime import datetime
 
-    feed = Feed()
-    feed._pet_id = pet.id
+    feed            = Feed()
+    feed.pub_date   = datetime.now()
+    pet.feeds.append(feed)
 
     return feed
 

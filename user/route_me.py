@@ -44,7 +44,7 @@ def me_profil():
     from storage.models import PetsOwner, delete_n_commit, sanitizer, commit
 
     error = Error()
-
+    peto  = {}
     try:
         peto = petsOwner_from_session()
         # • Retourne l'utilisateur actuel.
