@@ -122,41 +122,55 @@ def pets_pet(pet_name):
 route_feed = Blueprint('route_woof', __name__, template_folder='templates')
 
 # FEED
-@route_woof.route('/pets/feeds/<pet_name>', methods=['GET', 'POST'])
+@route_woof.route('/pets/feeds/<pet_name>', defaults={'current_page': None},  methods=['POST'])
+@route_woof.route('/pets/feeds/<pet_name>/<current_page>')
 @oauth.require_oauth()
-def pets_feeds(pet_name):
+def pets_feeds(pet_name, current_page):
     from images_upload.uploader import upload_file
     from utils.PetsHelper import query_from_pet_name, new_feed
     from storage.models import commit, sanitized_collection, merge_dicts, put_sanitized
 
-    error   = Error()
-    feeds   = {}
+    from storage.models import Feed
+    from sqlalchemy import and_
+
+    error = Error()
+    feeds = {}
+    pages = {}
 
     try:
         peto = petsOwner_from_session()
         pet  = query_from_pet_name(peto, pet_name)
 
         if request.method == 'GET':
-            feeds = pet.feeds
+            #TODO refactor
+            try:
+                _pages = Feed.query.filter(and_(Feed._pet_id == pet.id)).paginate(page=int(current_page), per_page=10)
+                feeds = _pages.items
+                #TODO refactor!
+                pages = {"total": _pages.total, "page": _pages.page, "per_page": _pages.per_page}
+            except: # No op.
+                raise ErrorException(Error(code=Error_code.OUTOFSCOPE))
 
         elif request.method == 'POST':
-            data      = merge_dicts(request.files, request.form)
-            sanitized = schema.validate_feed(data)
-            feed = new_feed(pet)
-            path = upload_file(sanitized["image"], bucketName=Bucket.FEEDS.value)
+            data        = merge_dicts(request.files, request.form)
+            sanitized   = schema.validate_feed(data)
+            feed        = new_feed(pet)
+            path        = upload_file(sanitized["image"], bucketName=Bucket.FEEDS.value)
             # sanitize
             sanitized["url_feed"] = path
             del sanitized["image"]
 
             put_sanitized(sanitized, feed)
-
-            feeds = pet.feeds
             commit()
+            feeds = [feed] # on ne retourne que le post updaté
 
     except ErrorException as e:
         error = e.error
 
-    return jsonify({"error" : error.to_dict(), "feeds" : sanitized_collection(feeds)})
+    return jsonify({
+        "error" : error.to_dict(),
+        "feeds" : sanitized_collection(feeds),
+        "pages" : pages})
 
 def route(app):
     app.url_map.converters['regex'] = RegexConverter

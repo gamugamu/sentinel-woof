@@ -27,7 +27,7 @@ def new_feed(pet):
     from storage.models import Pet, Feed
 
     feed = Feed()
-    pet.feeds.append(feed)
+    feed._pet_id = pet.id
 
     return feed
 
