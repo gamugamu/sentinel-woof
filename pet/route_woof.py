@@ -70,7 +70,6 @@ def pets_badge(pet_name):
     from images_upload.uploader import upload_file
     from utils.PetsHelper import query_from_pet_name
     from storage.models import commit, sanitizer
-    print "called"
     error   = Error()
     pet     = {}
 
@@ -133,11 +132,11 @@ def pets_feeds(pet_name):
 
     error   = Error()
     feeds   = {}
-    print "FEED"
+
     try:
         peto = petsOwner_from_session()
         pet  = query_from_pet_name(peto, pet_name)
-        print "pet ", pet, pet.feeds
+        print "--- files ", request.files, request.data, request.form
 
         if request.method == 'GET':
             feeds   = pet.feeds
@@ -145,11 +144,11 @@ def pets_feeds(pet_name):
         elif request.method == 'POST':
             data    = request.files
             feed    = new_feed(pet)
-            feeds   = pet.feeds
-            print "DDDD ", request.files
             path    = upload_file(request.files["image"], bucketName=Bucket.FEEDS.value)
             feed.url_feed = path
-            print "new feed? ", path
+            feed.comment  = request.form["comment"]
+            feeds   = pet.feeds
+
             #sanitized = schema.validate_pet(data)
             #put_from_sanitized(sanitized, pet, peto)
             commit()

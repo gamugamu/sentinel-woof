@@ -27,7 +27,6 @@ def new_feed(pet):
     from storage.models import Pet, Feed
 
     feed = Feed()
-    feed.comment = "un comment***"
     pet.feeds.append(feed)
 
     return feed

@@ -150,5 +150,5 @@ class Feed(OutputMixin, db.Model):
     __tablename__   = 'feed'
     id              = Column(Integer, primary_key=True)
     url_feed        = Column(String(150))
-    comment         = Column(String(41))
+    comment         = Column(String(300))
     _pet_id         = db.Column(db.Integer, db.ForeignKey('pet.id'))
