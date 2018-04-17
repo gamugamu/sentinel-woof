@@ -131,7 +131,7 @@ def pets_feeds(pet_name, current_page):
     from storage.models import commit, sanitized_collection, merge_dicts, put_sanitized
 
     from storage.models import Feed
-    from sqlalchemy import and_
+    from sqlalchemy import and_, desc
 
     error = Error()
     feeds = {}
@@ -145,7 +145,7 @@ def pets_feeds(pet_name, current_page):
             #TODO refactor
             try:
                 print "PET ID ", pet.id
-                _pages = Feed.query.filter(and_(Feed._pet_id == pet.id)).paginate(page=int(current_page), per_page=10)
+                _pages = Feed.query.filter(and_(Feed._pet_id == pet.id)).order_by(desc(Feed.pub_date)).paginate(page=int(current_page), per_page=10)
                 feeds = _pages.items
                 #TODO refactor!
                 pages = {"total": _pages.total, "page": _pages.page, "per_page": _pages.per_page}
@@ -160,7 +160,6 @@ def pets_feeds(pet_name, current_page):
             # sanitize
             sanitized["url_feed"] = path
             del sanitized["image"]
-            print "CREATED: PET ID ", feed._pet_id
 
             put_sanitized(sanitized, feed)
             commit()
