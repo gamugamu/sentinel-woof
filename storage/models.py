@@ -42,6 +42,11 @@ def commit():
 def to_json(obj):
     return jsonify(obj)
 
+def merge_dicts(x, y):
+    z = x.copy()   # start with x's keys and values
+    z.update(y)    # modifies z with y's keys and values & returns None
+    return z
+
 def sanitized_collection(list):
     sanitized = []
 
@@ -58,6 +63,10 @@ def sanitized_collection(list):
         sanitized.append(res_c)
 
     return sanitized
+
+def put_sanitized(data, obj):
+    for k, v in data.iteritems():
+        setattr(obj, k, v)
 
 def sanitizer(obj):
     if isinstance(obj, dict):

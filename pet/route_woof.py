@@ -35,7 +35,7 @@ def route_woof_get(seed, _seed, woof):
 @route_woof.route('/pets', methods=['POST', 'GET'])
 @oauth.require_oauth()
 def pets():
-    from storage.models import PetsOwner, sanitized_collection, commit
+    from storage.models import PetsOwner, sanitized_collection, commit, put_sanitized
     from utils.PetsHelper import new_pet, put_from_sanitized
 
     error = Error()
@@ -127,8 +127,7 @@ route_feed = Blueprint('route_woof', __name__, template_folder='templates')
 def pets_feeds(pet_name):
     from images_upload.uploader import upload_file
     from utils.PetsHelper import query_from_pet_name, new_feed
-
-    from storage.models import commit, sanitized_collection
+    from storage.models import commit, sanitized_collection, merge_dicts, put_sanitized
 
     error   = Error()
     feeds   = {}
@@ -136,25 +135,25 @@ def pets_feeds(pet_name):
     try:
         peto = petsOwner_from_session()
         pet  = query_from_pet_name(peto, pet_name)
-        print "--- files ", request.files, request.data, request.form
 
         if request.method == 'GET':
-            feeds   = pet.feeds
+            feeds = pet.feeds
 
         elif request.method == 'POST':
-            data    = request.files
-            feed    = new_feed(pet)
-            path    = upload_file(request.files["image"], bucketName=Bucket.FEEDS.value)
-            feed.url_feed = path
-            feed.comment  = request.form["comment"]
-            feeds   = pet.feeds
+            data      = merge_dicts(request.files, request.form)
+            sanitized = schema.validate_feed(data)
+            feed = new_feed(pet)
+            path = upload_file(sanitized["image"], bucketName=Bucket.FEEDS.value)
+            # sanitize
+            sanitized["url_feed"] = path
+            del sanitized["image"]
 
-            #sanitized = schema.validate_pet(data)
-            #put_from_sanitized(sanitized, pet, peto)
+            put_sanitized(sanitized, feed)
+
+            feeds = pet.feeds
             commit()
 
     except ErrorException as e:
-        print "error", e
         error = e.error
 
     return jsonify({"error" : error.to_dict(), "feeds" : sanitized_collection(feeds)})

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from schema import Schema, Regex, Optional, Use
+from schema import Schema, Regex, Optional, Use, And
 from utils.error import *
 
 def validate_userbycredential(data):
@@ -50,5 +50,23 @@ def validate_pet(data):
         return schema.validate(data)
 
     except Exception as e:
+        error = Error(code=Error_code.MALFSCHE, custom_message=str(e))
+        raise ErrorException(error)
+
+def validate_feed(data):
+    from werkzeug.datastructures import FileStorage
+
+    if not data:
+        return "{}", 'not in json format or empty'
+    try:
+        schema = Schema({  'image'    : FileStorage,
+        #TODO externaliser limitation text
+                            Optional('comment')    : And(basestring, lambda s: len(s) < 240)
+                        }, ignore_extra_keys=True)
+
+        return schema.validate(data)
+
+    except Exception as e:
+        print "error ", e
         error = Error(code=Error_code.MALFSCHE, custom_message=str(e))
         raise ErrorException(error)
