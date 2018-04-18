@@ -6,6 +6,7 @@ from utils.TokenBearer import InvalidUsage
 from images_upload.uploader import bucket_setup
 from pet.route_woof import route as pet_route
 from test.route_test import route as test_route
+from friends.route_friends import route as friends_route
 from os import environ
 
 
@@ -24,6 +25,8 @@ from storage import models
 
 pet_route(app)
 test_route(app)
+friends_route(app)
+
 #TODO refactor
 app.register_blueprint(route_me)
 ResourceOwnerPasswordCredentials(app)

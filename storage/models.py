@@ -140,6 +140,12 @@ class OutputMixin(object):
             rel = self.RELATIONSHIPS_TO_DICT
         return json.dumps(self.to_dict(rel), default=extended_encoder)
 
+class friendship(OutputMixin, db.Model):
+    __tablename__   = 'friends'
+    id              = Column(Integer, primary_key=True)
+    friend_id       = Column(db.Integer, db.ForeignKey('petsowner.id'))
+    myfriend_id     = Column(db.Integer, db.ForeignKey('petsowner.id'))
+
 class PetsOwner(OutputMixin, db.Model):
     __tablename__   = 'petsowner'
     id              = Column(Integer, primary_key=True)
@@ -148,8 +154,14 @@ class PetsOwner(OutputMixin, db.Model):
     mail            = Column(String(50))
     name            = Column(String(50))
     seed            = Column(String(20))
-    pets            = relationship("Pet", backref='petowner', cascade="all, delete-orphan")
     cre_date        = Column(DateTime)
+    pets            = relationship("Pet", backref='petowner', cascade="all, delete-orphan")
+    friends         = relationship('PetsOwner',
+                        secondary       = friendship,
+                        primaryjoin     = (friendship.friend_id == id),
+                        secondaryjoin   = (friendship.myfriend_id == id),
+                        backref         = backref('friendship', lazy = 'joined'),
+                        lazy            = 'joined')
 
 class Pet(OutputMixin, db.Model):
     __tablename__   = 'pet'
