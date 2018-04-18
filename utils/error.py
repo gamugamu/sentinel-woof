@@ -7,6 +7,7 @@ class Error_code(Enum):
     INVGRANT    = 10
     USERNOTFD   = 20
     PETNOTFD    = 25
+    FEEDNOTFND  = 26
     MALFSCHE    = 50
     PETNAMEEX   = 110
     PETMAXLIM   = 111
@@ -20,6 +21,7 @@ info_error = {
     Error_code.INVGRANT     : "Grant token invalid",
     Error_code.USERNOTFD    : "Utilisateur introuvable",
     Error_code.PETNOTFD     : "Pet introuvable",
+    Error_code.FEEDNOTFND   : "Feed introuvable",
     Error_code.MALFSCHE     : "Schema invalide",
     Error_code.PETNAMEEX    : "Nom invalide. (Doublon)",
     Error_code.PETMAXLIM    : "Limite de creation de pets atteint",

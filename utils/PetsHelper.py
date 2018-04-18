@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from utils.error import *
 from utils.Sanitizer import put_sanitized
+from sqlalchemy import and_
+from datetime import datetime
 
 MAX_PET = 20
 
@@ -12,6 +14,7 @@ def new_pet(peto):
         # limit to a quantity
         if len(peto.pets) <= MAX_PET:
             pet = Pet()
+            pet.cre_date = datetime.now()
             peto.pets.append(pet)
         else:
             error = Error(code=Error_code.PETMAXLIM)
@@ -23,19 +26,42 @@ def new_pet(peto):
 
     return pet
 
+def is_uuid(uuid_string, version=4):
+    try:
+        # Si uuid_string est un code hex valide mais pas un uuid valid,
+        # UUID() va quand même le convertir en uuid valide. Pour se prémunir
+        # de ce problème, on check la version original (sans les tirets) avec
+        # le code hex généré qui doivent être les mêmes.
+        uid = UUID(uuid_string, version=version)
+        return uid.hex == uuid_string.replace('-', '')
+    except ValueError:
+        return False
+
 def new_feed(pet):
     from storage.models import Pet, Feed
-    from datetime import datetime
+    import uuid
 
-    feed            = Feed()
-    feed.pub_date   = datetime.now()
+    feed                = Feed()
+    feed.pub_date       = datetime.now()
+    feed.uuid           = uuid.uuid4()
+    feed._petowner_id   = pet._petowner_id
     pet.feeds.append(feed)
 
     return feed
 
+def query_from_feed_uuid(uuid, peto):
+    from storage.models import Feed
+
+    feed = Feed.query.filter(and_(Feed._petowner_id == peto.id, Feed.uuid == uuid)).first()
+    if feed is None:
+        error = Error(code=Error_code.FEEDNOTFND)
+        raise ErrorException(error)
+    else:
+        return feed
+
+
 def put_from_sanitized(dict, pet, peto):
     from storage.models import Pet, commit
-    from sqlalchemy import and_
     import os.path
 
     if Pet.query.filter(and_(Pet._petowner_id == peto.id, Pet.name == dict["name"])).first():

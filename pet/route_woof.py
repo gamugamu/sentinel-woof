@@ -123,36 +123,36 @@ route_feed = Blueprint('route_woof', __name__, template_folder='templates')
 
 # FEED
 @route_woof.route('/pets/feeds/<pet_name>', defaults={'current_page': None},  methods=['POST'])
+@route_woof.route('/pets/feeds/<pet_name>', defaults={'current_page': None},  methods=['PUT', 'DELETE'])
 @route_woof.route('/pets/feeds/<pet_name>/<current_page>')
 @oauth.require_oauth()
 def pets_feeds(pet_name, current_page):
     from images_upload.uploader import upload_file
-    from utils.PetsHelper import query_from_pet_name, new_feed
+    from utils.PetsHelper import query_from_pet_name, new_feed, query_from_feed_uuid
     from storage.models import commit, sanitized_collection, merge_dicts, put_sanitized
-
-    from storage.models import Feed
+    from storage.models import Feed, delete_n_commit
     from sqlalchemy import and_, desc
 
     error = Error()
     feeds = {}
-    pages = {}
+    pages = None
 
     try:
         peto = petsOwner_from_session()
-        pet  = query_from_pet_name(peto, pet_name)
 
         if request.method == 'GET':
-            #TODO refactor
+            pet = query_from_pet_name(peto, pet_name)
+
             try:
-                print "PET ID ", pet.id
-                _pages = Feed.query.filter(and_(Feed._pet_id == pet.id)).order_by(desc(Feed.pub_date)).paginate(page=int(current_page), per_page=10)
-                feeds = _pages.items
+                _pages  = Feed.query.filter(and_(Feed._pet_id == pet.id)).order_by(desc(Feed.pub_date)).paginate(page=int(current_page), per_page=10)
+                feeds   = _pages.items
                 #TODO refactor!
                 pages = {"total": _pages.total, "page": _pages.page, "per_page": _pages.per_page}
             except: # No op.
                 raise ErrorException(Error(code=Error_code.OUTOFSCOPE))
 
         elif request.method == 'POST':
+            pet         = query_from_pet_name(peto, pet_name)
             data        = merge_dicts(request.files, request.form)
             sanitized   = schema.validate_feed(data)
             feed        = new_feed(pet)
@@ -165,13 +165,29 @@ def pets_feeds(pet_name, current_page):
             commit()
             feeds = [feed] # on ne retourne que le post updaté
 
+        elif request.method == 'PUT':
+            uuid        = pet_name # label change
+            data        = merge_dicts(request.files, request.form)
+            sanitized   = schema.validate_feed(data, image_optional=True)
+            feed        = query_from_feed_uuid(uuid, peto)
+            # note: Les orphan link sont enlevé par un deamon par cycles
+            put_sanitized(sanitized, feed)
+            commit()
+            feeds = [feed]
+
+        elif request.method == 'DELETE':
+            uuid        = pet_name # change label
+            feed        = query_from_feed_uuid(uuid, peto)
+            delete_n_commit(feed)
+
     except ErrorException as e:
         error = e.error
 
-    return jsonify({
-        "error" : error.to_dict(),
-        "feeds" : sanitized_collection(feeds),
-        "pages" : pages})
+    result_list = {"error" : error.to_dict(), "feeds" : sanitized_collection(feeds)}
+    if pages is not None:
+        result_list["pages", pages]
+
+    return jsonify(result_list)
 
 def route(app):
     app.url_map.converters['regex'] = RegexConverter

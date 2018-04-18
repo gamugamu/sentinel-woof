@@ -11,7 +11,9 @@ def user_from_credential(name, password):
 
     if not user:
         #si pas de user, on le crée
-        return Storage.save_user(name, password)
+        user = Storage.save_user(name, password)
+        user.cre_date = datetime.now()
+        return user
     else:
         return user
 

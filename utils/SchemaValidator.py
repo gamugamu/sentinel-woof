@@ -53,15 +53,15 @@ def validate_pet(data):
         error = Error(code=Error_code.MALFSCHE, custom_message=str(e))
         raise ErrorException(error)
 
-def validate_feed(data):
+def validate_feed(data, image_optional=False):
     from werkzeug.datastructures import FileStorage
 
     if not data:
         return "{}", 'not in json format or empty'
     try:
-        schema = Schema({  'image'    : FileStorage,
+        schema = Schema({   Optional('image') if image_optional else 'image' : FileStorage,
         #TODO externaliser limitation text
-                            Optional('comment')    : And(basestring, lambda s: len(s) < 240)
+                            Optional('comment') : And(basestring, lambda s: len(s) < 240)
                         }, ignore_extra_keys=True)
 
         return schema.validate(data)

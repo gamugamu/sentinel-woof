@@ -48,3 +48,5 @@ curl -i -H "Content-Type: application/json" -X DELETE http://127.0.0.1:8000/me
 curl -k -H "Authorization: Bearer tmBC6jSx973do1kVRgFlaQF5njLHJ8" -H "Content-Type: application/json" https://woof.wannanosuurus.com/me/pets
 
 curl -i -H "Authorization: Bearer KL5Gbi2uXcVKAWscyBEXBUvD2MSjbL" http://localhost:5001/pets/feeds/luke -X POST -F "image=@/Users/abadiel/Desktop/D2.jpg"
+
+curl -i -H "Authorization: Bearer 6fY6Bjiex79emxkr7J4qmld718B801" http://0.0.0.0:5002/pets/feeds/kikoo -X POST -F "image=@/Users/lionel/Desktop/home-dog-running.jpg"

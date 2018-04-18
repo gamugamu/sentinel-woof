@@ -67,6 +67,10 @@ def sanitized_collection(list):
 def put_sanitized(data, obj):
     for k, v in data.iteritems():
         setattr(obj, k, v)
+    # test if can mod
+
+    if hasattr(obj, 'mod_date'):
+        obj.mod_date = datetime.datetime.now()
 
 def sanitizer(obj):
     if isinstance(obj, dict):
@@ -145,6 +149,7 @@ class PetsOwner(OutputMixin, db.Model):
     name            = Column(String(50))
     seed            = Column(String(20))
     pets            = relationship("Pet", backref='petowner', cascade="all, delete-orphan")
+    cre_date        = Column(DateTime)
 
 class Pet(OutputMixin, db.Model):
     __tablename__   = 'pet'
@@ -154,11 +159,15 @@ class Pet(OutputMixin, db.Model):
     woof_name       = Column(String(41))
     _petowner_id    = db.Column(db.Integer, db.ForeignKey('petsowner.id'))
     feeds           = relationship("Feed", backref='pet', cascade="all, delete-orphan")
+    cre_date        = Column(DateTime)
 
 class Feed(OutputMixin, db.Model):
     __tablename__   = 'feed'
     id              = Column(Integer, primary_key=True)
     url_feed        = Column(String(150))
     comment         = Column(String(300))
-    pub_date        = Column(DateTime)
-    _pet_id         = db.Column(db.Integer, db.ForeignKey('pet.id'))
+    uuid            = Column(String(32))
+    cre_date        = Column(DateTime)
+    mod_date        = Column(DateTime)
+    _pet_id         = db.Column(Integer, db.ForeignKey('pet.id'))
+    _petowner_id    = db.Column(Integer) # low coupled
