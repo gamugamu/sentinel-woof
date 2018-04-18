@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask_sentinel.data import Storage
 from utils.error import *
-
-#from utils import TokenBearer
+from datetime import datetime
 
 # renvoie un compte quoi qu'il arrive. Si le compte n'existe pas en crée un.
 # Sauf si c'est un compte woofwoof.
@@ -12,7 +11,6 @@ def user_from_credential(name, password):
     if not user:
         #si pas de user, on le crée
         user = Storage.save_user(name, password)
-        user.cre_date = datetime.now()
         return user
     else:
         return user
@@ -27,6 +25,8 @@ def mirrored_petsOwner(sentinel_id, provider_id):
     if not pets_owner:
         #si pas de user, on le crée
         pets_owner = PetsOwner(_sentinel_id=string_id, _provider_id=provider_id, seed=petname.Generate(2, "-"))
+        pets_owner.cre_date = datetime.now()
+
         add_n_commit(pets_owner)
 
         return pets_owner

@@ -143,8 +143,8 @@ class OutputMixin(object):
 class friendship(OutputMixin, db.Model):
     __tablename__   = 'friends'
     id              = Column(Integer, primary_key=True)
-    friend_id       = Column(db.Integer, db.ForeignKey('petsowner.id'))
-    myfriend_id     = Column(db.Integer, db.ForeignKey('petsowner.id'))
+    friend_id       = Column(Integer, ForeignKey('petsowner.id'))
+    myfriend_id     = Column(Integer, ForeignKey('petsowner.id'))
 
 class PetsOwner(OutputMixin, db.Model):
     __tablename__   = 'petsowner'
@@ -157,11 +157,21 @@ class PetsOwner(OutputMixin, db.Model):
     cre_date        = Column(DateTime)
     pets            = relationship("Pet", backref='petowner', cascade="all, delete-orphan")
     friends         = relationship('PetsOwner',
-                        secondary       = friendship,
+                        secondary       = friendship.__table__,
                         primaryjoin     = (friendship.friend_id == id),
                         secondaryjoin   = (friendship.myfriend_id == id),
                         backref         = backref('friendship', lazy = 'joined'),
                         lazy            = 'joined')
+
+    def befriend(self, friend):
+        if friend not in self.friends:
+            self.friends.append(friend)
+            friend.friends.append(self)
+
+    def unfriend(self, friend):
+        if friend in self.friends:
+            self.friends.remove(friend)
+            friend.friends.remove(self)
 
 class Pet(OutputMixin, db.Model):
     __tablename__   = 'pet'
@@ -169,7 +179,7 @@ class Pet(OutputMixin, db.Model):
     name            = Column(String(20))
     url_badge       = Column(String(150))
     woof_name       = Column(String(41))
-    _petowner_id    = db.Column(db.Integer, db.ForeignKey('petsowner.id'))
+    _petowner_id    = Column(Integer, ForeignKey('petsowner.id'))
     feeds           = relationship("Feed", backref='pet', cascade="all, delete-orphan")
     cre_date        = Column(DateTime)
 
@@ -181,5 +191,5 @@ class Feed(OutputMixin, db.Model):
     uuid            = Column(String(32))
     cre_date        = Column(DateTime)
     mod_date        = Column(DateTime)
-    _pet_id         = db.Column(Integer, db.ForeignKey('pet.id'))
-    _petowner_id    = db.Column(Integer) # low coupled
+    _pet_id         = Column(Integer, ForeignKey('pet.id'))
+    _petowner_id    = Column(Integer) # low coupled
