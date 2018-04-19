@@ -63,7 +63,7 @@ def pets():
     return jsonify({"error" : error.to_dict(), "pets" : sanitized_collection(pets)})
 
 
-@route_woof.route('/pets/badge/<pet_name>', methods=['GET', 'PUT'])
+@route_woof.route('/pets/badge/<pet_name>', methods=['GET', 'PUT', 'DELETE'])
 @oauth.require_oauth()
 def pets_badge(pet_name):
     from images_upload.uploader import upload_file
@@ -85,17 +85,23 @@ def pets_badge(pet_name):
             pet.url_badge = path
             commit()
 
+        elif request.method == 'DELETE':
+            #TODO validation
+            path = upload_file(request.files["image"], bucketName=Bucket.BADGE.value)
+            pet.url_badge = path
+            commit()
+
     except ErrorException as e:
         error = e.error
 
     return jsonify({"error" : error.to_dict(), "woof" : sanitizer(pet)})
 
-@route_woof.route('/pets/<pet_name>', methods=['GET', 'PUT'])
+@route_woof.route('/pets/<pet_name>', methods=['GET', 'PUT', 'DELETE'])
 @oauth.require_oauth()
 def pets_pet(pet_name):
     from utils.PetsHelper import query_from_pet_name, put_from_sanitized
     from utils.UserHelper import petsOwner_from_session
-    from storage.models import Pet, commit, sanitizer
+    from storage.models import Pet, commit, delete_n_commit, sanitizer
 
     error = Error()
     pet   = {}
@@ -111,6 +117,10 @@ def pets_pet(pet_name):
             sanitized = schema.validate_pet(data)
             put_from_sanitized(sanitized, pet, peto)
             commit()
+
+        elif request.method == 'DELETE':
+            delete_n_commit(pet)
+            pet = {}
 
     except ErrorException as e:
         error = e.error

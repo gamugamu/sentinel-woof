@@ -113,7 +113,7 @@
       </div><!-- box -->
 
       <step red lighten-1
-        title             = "Profil User"
+        title             = "Profil user"
         method            = "GET"
         url_root          = {{url_root}}
         route             = "me"
@@ -123,7 +123,7 @@
         require_login     = true
       ></step>
       <step red lighten-1
-        title           = ""
+        title           = "Modification user"
         method          = "PUT"
         url_root        = {{url_root}}
         route           = "me"
@@ -138,7 +138,7 @@
           'mail'   : 'Le mail de l\'utilisateur'}"
       ></step>
       <step red lighten-1
-        title             = ""
+        title             = "Suppression user"
         method            = "DELETE"
         url_root          = {{url_root}}
         route             = "me"
@@ -170,8 +170,6 @@
         v-bind:data = "{
           'name'     : 'Le nom du chien. !Doublon.'}">>
       </step>
-
-      <h2>/pet</h2>
       <step red lighten-1
         title             = "Détail pet"
         method            = "GET"
@@ -184,7 +182,7 @@
         require_login     = true>
       </step>
       <step red lighten-1
-        title             = ""
+        title             = "Modification pet"
         method            = "PUT"
         dyn_url           = "true"
         dyn_url_label     = "pet_name"
@@ -200,7 +198,17 @@
         }"
         require_login     = true>
       </step>
-
+      <step red lighten-1
+        title             = "Suppression pet"
+        method            = "DELETE"
+        dyn_url           = "true"
+        dyn_url_label     = "pet_name"
+        url_root          = {{url_root}}
+        route             = "pets/"
+        required_bearer   = "true"
+        use               = "Supprime un pet en particulier."
+        require_login     = true>
+      </step>
         <h2>/Feeds</h2>
         <step red lighten-1
           title             = "Liste feeds"
@@ -225,14 +233,14 @@
         </step>
 
         <step red lighten-1
-          title             = "Post feed pour un pet"
+          title             = "Creation feed pour pet"
           method            = "POST"
           dyn_url           = "true"
           dyn_url_label     = "pet_name"
           url_root          = {{url_root}}
           route             = "feeds/"
           required_bearer   = "true"
-          use               = "Post un message pour le pet."
+          use               = "Créé un message pour le pet."
           require_login     = true>
         </step>
 

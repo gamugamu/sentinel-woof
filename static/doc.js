@@ -4,16 +4,23 @@ Vue.component('step', {
   'data', 'require_oauth', 'require_login', 'return_id', 'json_return', 'dyn_value', 'dyn_url', 'dyn_url_label'],
   template: `
     <div>
-      <h5 v-if="title">• {{title}}</h5>
-      <h5 v-else></br></h5>
-      <b class="white-text method" :class="classfromString(method)">{{method}}</b>
-          {{url_root}}
-      <b class="cyan lighten-5">
-        {{route}}
-      </b>
-        <div v-if="dyn_url === 'true'" class="input-field inline url_input">
-          <input type="text" id="url_suffix" v-on:keyup="change_urlHandler" v-bind:placeholder="dyn_url_label" class="validate url_input">
-        </div>
+      <div class="row">
+        <div class="col s12">
+          <h5 v-if="title">• {{title}}</h5>
+          <h5 v-else></br></h5>
+          </div> <!-- col -->
+          <div class="col s12">
+            <b class="white-text method" :class="classfromString(method)">{{method}}</b>
+            {{url_root}}
+          <b class="cyan lighten-5">
+            {{route}}
+          </b>
+          <div v-if="dyn_url === 'true'" class="input-field inline url_input">
+            <input type="text" id="url_suffix" v-on:keyup="change_urlHandler" v-bind:placeholder="dyn_url_label" class="validate url_input">
+          </div>
+        </div> <!-- col -->
+      </div> <!-- row -->
+
       <p><i>{{use}}</i></p>
       <table class="bordered" v-if="this.data != undefined">
        <thead>
