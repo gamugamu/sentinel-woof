@@ -49,6 +49,17 @@ curl -k -H "Authorization: Bearer tmBC6jSx973do1kVRgFlaQF5njLHJ8" -H "Content-Ty
 
 curl -i -H "Authorization: Bearer KL5Gbi2uXcVKAWscyBEXBUvD2MSjbL" http://localhost:5001/pets/feeds/luke -X POST -F "image=@/Users/abadiel/Desktop/D2.jpg"
 
+# rajout feed
 curl -i -H "Authorization: Bearer 6fY6Bjiex79emxkr7J4qmld718B801" http://0.0.0.0:5002/pets/feeds/kikoo -X POST -F "image=@/Users/lionel/Desktop/home-dog-running.jpg"
 
+# liste feed d'un pets en particulier
+curl -i -H "Authorization: Bearer 6fY6Bjiex79emxkr7J4qmld718B801" http://0.0.0.0:5002/pets/feeds/kikoo/1
+
+# modification feed
 curl -i -H "Authorization: Bearer 6fY6Bjiex79emxkr7J4qmld718B801" http://0.0.0.0:5002/pets/feeds/423bd68e433a48a8a75142ccf6378d89 -X PUT -F "image=@/Users/lionel/Desktop/home-dog-running.jpg" -F "comment= me me me MOX MOX"
+
+# liste ami
+curl -i -H "Content-Type: application/json" -i -H "Authorization: Bearer lKD7KdZPXzNjA7ORY7eDOwz0HKMR6W" http://localhost:5002/friends
+
+# rajout ami
+curl -i -H "Content-Type: application/json" -i -H "Authorization: Bearer 9gOxnZU9EJS6uEOfaBGBpC7t1I1oz2" http://localhost:5002/friends/big-donkey -X POST

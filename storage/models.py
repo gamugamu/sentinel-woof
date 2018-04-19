@@ -140,11 +140,20 @@ class OutputMixin(object):
             rel = self.RELATIONSHIPS_TO_DICT
         return json.dumps(self.to_dict(rel), default=extended_encoder)
 
-class friendship(OutputMixin, db.Model):
+class Friendship(OutputMixin, db.Model):
+    class Request(Enum):
+        NONE    = 0
+        PENDING = 1
+        GRANTED = 2
+        REFUSED = 3
+
     __tablename__   = 'friends'
-    id              = Column(Integer, primary_key=True)
-    friend_id       = Column(Integer, ForeignKey('petsowner.id'))
-    myfriend_id     = Column(Integer, ForeignKey('petsowner.id'))
+    id              = Column(Integer, primary_key=True, autoincrement=False)
+    user_from       = db.Column(db.Integer, db.ForeignKey('petsowner.id'), primary_key=True)
+    user_to         = db.Column(db.Integer, db.ForeignKey('petsowner.id'), primary_key=True)
+    status          = db.Column(db.Integer, default=Request.NONE)
+
+
 
 class PetsOwner(OutputMixin, db.Model):
     __tablename__   = 'petsowner'
@@ -156,22 +165,8 @@ class PetsOwner(OutputMixin, db.Model):
     seed            = Column(String(20))
     cre_date        = Column(DateTime)
     pets            = relationship("Pet", backref='petowner', cascade="all, delete-orphan")
-    friends         = relationship('PetsOwner',
-                        secondary       = friendship.__table__,
-                        primaryjoin     = (friendship.friend_id == id),
-                        secondaryjoin   = (friendship.myfriend_id == id),
-                        backref         = backref('friendship', lazy = 'joined'),
-                        lazy            = 'joined')
-
-    def befriend(self, friend):
-        if friend not in self.friends:
-            self.friends.append(friend)
-            friend.friends.append(self)
-
-    def unfriend(self, friend):
-        if friend in self.friends:
-            self.friends.remove(friend)
-            friend.friends.remove(self)
+    friends_to      = db.relationship('Friendship', backref='r_to', primaryjoin=id==Friendship.user_to)
+    friends_from    = db.relationship('Friendship', backref='r_from', primaryjoin=id==Friendship.user_from )
 
 class Pet(OutputMixin, db.Model):
     __tablename__   = 'pet'

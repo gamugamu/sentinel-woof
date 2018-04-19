@@ -11,6 +11,7 @@ class Error_code(Enum):
     MALFSCHE    = 50
     PETNAMEEX   = 110
     PETMAXLIM   = 111
+    FRNDALONE   = 120
     NOTIMPL     = 150
     BAETOOLARG  = 180
     OUTOFSCOPE  = 190
@@ -25,6 +26,7 @@ info_error = {
     Error_code.MALFSCHE     : "Schema invalide",
     Error_code.PETNAMEEX    : "Nom invalide. (Doublon)",
     Error_code.PETMAXLIM    : "Limite de creation de pets atteint",
+    Error_code.FRNDALONE    : "No. You are alone forever", # can't add self as friend
     Error_code.NOTIMPL      : "Fonction non implémentée",
     Error_code.BAETOOLARG   : "Badge trop large",
     Error_code.OUTOFSCOPE   : "Out of scope"
