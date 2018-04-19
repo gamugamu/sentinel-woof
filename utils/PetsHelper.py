@@ -42,7 +42,7 @@ def new_feed(pet):
     import uuid
 
     feed                = Feed()
-    feed.pub_date       = datetime.now()
+    feed.cre_date       = datetime.now()
     feed.uuid           = uuid.uuid4()
     feed._petowner_id   = pet._petowner_id
     pet.feeds.append(feed)

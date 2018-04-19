@@ -178,7 +178,7 @@
         dyn_url           = "true"
         dyn_url_label     = "pet_name"
         url_root          = {{url_root}}
-        route             = "pet/"
+        route             = "pets/"
         required_bearer   = "true"
         use               = "Retourne un pet en particulier."
         require_login     = true>
@@ -189,7 +189,7 @@
         dyn_url           = "true"
         dyn_url_label     = "pet_name"
         url_root          = {{url_root}}
-        route             = "pet/"
+        route             = "pets/"
         required_bearer   = "true"
         use               = "Modifie un pet."
         v-bind:dyn_value  =  "{
@@ -200,6 +200,75 @@
         }"
         require_login     = true>
       </step>
+
+        <h2>/Feeds</h2>
+        <step red lighten-1
+          title             = "Liste feeds"
+          method            = "GET"
+          url_root          = {{url_root}}
+          route             = "feeds"
+          required_bearer   = "true"
+          use               = "Récupère les derniers post de tout les pets. Délivre un nombre limité de post par page. Par défault, page 1."
+          require_login     = true>
+        </step>
+
+        <step red lighten-1
+          title             = "Liste feeds par pet"
+          method            = "GET"
+          dyn_url           = "true"
+          dyn_url_label     = "pet_name / page"
+          url_root          = {{url_root}}
+          route             = "feeds/"
+          required_bearer   = "true"
+          use               = "Récupère les derniers post du pet. Délivre un nombre limité de post par page. Par défault, page 1."
+          require_login     = true>
+        </step>
+
+        <step red lighten-1
+          title             = "Post feed pour un pet"
+          method            = "POST"
+          dyn_url           = "true"
+          dyn_url_label     = "pet_name"
+          url_root          = {{url_root}}
+          route             = "feeds/"
+          required_bearer   = "true"
+          use               = "Post un message pour le pet."
+          require_login     = true>
+        </step>
+
+        <step red lighten-1
+          title             = "Modifie feed d'un pet"
+          method            = "PUT"
+          dyn_url           = "true"
+          dyn_url_label     = "feed_uuid"
+          url_root          = {{url_root}}
+          route             = "feeds/"
+          required_bearer   = "true"
+          use               = "Modifie le message ou l'image du feed."
+          require_login     = true>
+        </step>
+
+        <h2>/Friends</h2>
+        <step red lighten-1
+          title             = "Liste ami"
+          method            = "GET"
+          route             = "friends"
+          url_root          = {{url_root}}
+          required_bearer   = "true"
+          use               = "Retrouve la liste d'amis du petowner."
+          require_login     = true>
+        </step>
+        <step red lighten-1
+          title             = "Rajout ami"
+          method            = "POST"
+          route             = "friends/"
+          dyn_url           = "true"
+          dyn_url_label     = "woof_name"
+          url_root          = {{url_root}}
+          required_bearer   = "true"
+          use               = "Permet de rajouter un ami."
+          require_login     = true>
+        </step>
 
         <h2>/#woof-name</h2>
     </div><!-- box -->

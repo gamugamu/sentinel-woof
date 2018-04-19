@@ -56,7 +56,7 @@ curl -i -H "Authorization: Bearer 6fY6Bjiex79emxkr7J4qmld718B801" http://0.0.0.0
 curl -i -H "Authorization: Bearer 6fY6Bjiex79emxkr7J4qmld718B801" http://0.0.0.0:5002/pets/feeds/kikoo/1
 
 # modification feed
-curl -i -H "Authorization: Bearer 6fY6Bjiex79emxkr7J4qmld718B801" http://0.0.0.0:5002/pets/feeds/423bd68e433a48a8a75142ccf6378d89 -X PUT -F "image=@/Users/lionel/Desktop/home-dog-running.jpg" -F "comment= me me me MOX MOX"
+curl -i -H "Authorization: Bearer 6fY6Bjiex79emxkr7J4qmld718B801" http://0.0.0.0:5002/pets/feeds/423bd68e433a48a8a75142ccf6378d89 -H "Content-Type: multipart/form-data" "-X PUT -F "image=@/Users/lionel/Desktop/home-dog-running.jpg" -F "comment= me me me MOX MOX"
 
 # liste ami
 curl -i -H "Content-Type: application/json" -i -H "Authorization: Bearer lKD7KdZPXzNjA7ORY7eDOwz0HKMR6W" http://localhost:5002/friends

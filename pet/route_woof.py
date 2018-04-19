@@ -118,12 +118,13 @@ def pets_pet(pet_name):
 
     return jsonify({"error" : error.to_dict(), "woof" : sanitizer(pet)})
 
-route_feed = Blueprint('route_woof', __name__, template_folder='templates')
+route_feed = Blueprint('route_feed', __name__, template_folder='templates')
 
 # FEED
-@route_woof.route('/pets/feeds/<pet_name>', defaults={'current_page': None},  methods=['POST'])
-@route_woof.route('/pets/feeds/<pet_name>', defaults={'current_page': None},  methods=['PUT', 'DELETE'])
-@route_woof.route('/pets/feeds/<pet_name>/<current_page>')
+
+@route_feed.route('/feeds/<pet_name>/<current_page>')
+@route_feed.route('/feeds/<pet_name>', defaults={'current_page': 1},  methods=['GET', 'POST', 'PUT', 'DELETE'])
+@route_feed.route('/feeds', defaults={'pet_name': 1, 'current_page': 1}, methods=['GET'])
 @oauth.require_oauth()
 def pets_feeds(pet_name, current_page):
     from images_upload.uploader import upload_file
@@ -132,18 +133,33 @@ def pets_feeds(pet_name, current_page):
     from storage.models import Feed, delete_n_commit
     from sqlalchemy import and_, desc
 
+
     error = Error()
     feeds = {}
-    pages = None
+    pages = {}
 
     try:
+        def represents_int(s):
+            try:
+                int(s)
+                return True
+            except ValueError:
+                return False
+
+        if represents_int(pet_name):
+            raise ErrorException(Error(code=Error_code.NOTIMPL))
+
+        if isinstance(pet_name, int):
+            raise ErrorException(Error(code=Error_code.NOTIMPL))
+
         peto = petsOwner_from_session()
 
         if request.method == 'GET':
             pet = query_from_pet_name(peto, pet_name)
 
             try:
-                _pages  = Feed.query.filter(and_(Feed._pet_id == pet.id)).order_by(desc(Feed.pub_date)).paginate(page=int(current_page), per_page=10)
+                print "current page", current_page
+                _pages  = Feed.query.filter(and_(Feed._pet_id == pet.id)).order_by(desc(Feed.cre_date)).paginate(page=int(current_page), per_page=10)
                 feeds   = _pages.items
                 #TODO refactor!
                 pages = {"total": _pages.total, "page": _pages.page, "per_page": _pages.per_page}
@@ -155,7 +171,12 @@ def pets_feeds(pet_name, current_page):
             data        = merge_dicts(request.files, request.form)
             sanitized   = schema.validate_feed(data)
             feed        = new_feed(pet)
-            path        = upload_file(sanitized["image"], bucketName=Bucket.FEEDS.value)
+
+            try:
+                path = upload_file(sanitized["image"], bucketName=Bucket.FEEDS.value)
+            except: # No op.
+                raise ErrorException(Error(code=Error_code.WRGDCTYPE))
+
             # sanitize
             sanitized["url_feed"] = path
             del sanitized["image"]
@@ -170,7 +191,10 @@ def pets_feeds(pet_name, current_page):
             sanitized   = schema.validate_feed(data, image_optional=True)
             feed        = query_from_feed_uuid(uuid, peto)
             # note: Les orphan link sont enlevé par un deamon par cycles
-            put_sanitized(sanitized, feed)
+            try:
+                put_sanitized(sanitized, feed)
+            except: # No op.
+                raise ErrorException(Error(code=Error_code.WRGDCTYPE))
             commit()
             feeds = [feed]
 
@@ -182,12 +206,13 @@ def pets_feeds(pet_name, current_page):
     except ErrorException as e:
         error = e.error
 
-    result_list = {"error" : error.to_dict(), "feeds" : sanitized_collection(feeds)}
-    if pages is not None:
-        result_list["pages", pages]
+    result_list = { "error" : error.to_dict(),
+                    "feeds" : sanitized_collection(feeds),
+                    "pages" : pages}
 
     return jsonify(result_list)
 
 def route(app):
     app.url_map.converters['regex'] = RegexConverter
     app.register_blueprint(route_woof)
+    app.register_blueprint(route_feed)

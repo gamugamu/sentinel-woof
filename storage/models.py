@@ -153,8 +153,6 @@ class Friendship(OutputMixin, db.Model):
     user_to         = db.Column(db.Integer, db.ForeignKey('petsowner.id'), primary_key=True)
     status          = db.Column(db.Integer, default=Request.NONE)
 
-
-
 class PetsOwner(OutputMixin, db.Model):
     __tablename__   = 'petsowner'
     id              = Column(Integer, primary_key=True)
@@ -183,7 +181,7 @@ class Feed(OutputMixin, db.Model):
     id              = Column(Integer, primary_key=True)
     url_feed        = Column(String(150))
     comment         = Column(String(300))
-    uuid            = Column(String(32))
+    uuid            = Column(String(124))
     cre_date        = Column(DateTime)
     mod_date        = Column(DateTime)
     _pet_id         = Column(Integer, ForeignKey('pet.id'))
