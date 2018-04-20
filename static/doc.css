@@ -75,9 +75,17 @@ hr.style {
   background-color: SteelBlue;
 }
 
-.return{
+.return_response{
   background-color: PapayaWhip;
-  overflow: hidden;
+}
+
+.block_face{
+  display: block;
+  padding: 10px;
+  unicode-bidi: embed;
+  word-break: break-all;
+  font-family: monospace;
+  white-space: pre-wrap;
 }
 
 pre {
@@ -90,7 +98,7 @@ pre {
 .test {
   font-family: 'Varela Round', sans-serif;
   margin-right: 10px;
-  margin-bottom: 20px;
+  margin-top: 10px;
 }
 
 .url_input{

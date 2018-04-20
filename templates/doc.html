@@ -65,6 +65,38 @@
         </div><!-- forms -->
       </div><!-- box -->
 
+      <h2>/signin</h2>
+      <step red lighten-1
+        title       = "Captcha pour creation de compte"
+        method      = "GET"
+        url_root    = {{url_root}}
+        route       = "signin/captcha"
+        use         = "Le capchta empêche les bot de créer un compte. La création d'un compte woof nécessite donc un captcha.">
+      </step>
+      <step red lighten-1
+        title       = "Création de compte"
+        method      = "POST"
+        url_root    = {{url_root}}
+        route       = "signin"
+        use         = "Permet de se créer un compte. Return un token en cas de succés"
+        require_oauth = true
+        v-bind:dyn_value   = "{
+          'client_id'     : '*client_id',
+          'uuid'          : '',
+          'value'         : '',
+          'mail'          : '',
+          'password'      : ''}"
+
+        v-bind:data = "{
+          'client_id'     : 'Le client id secret reçu par l\'administrateur',
+          'uuid'          : 'L\'identifiant du captcha',
+          'value'         : 'le message dans le captcha',
+          'mail'          : 'le mail de l\'utilisateur. Doit etre unique.',
+          'password'      : 'Le password pour ce compte. Une majuscule, un numéro et au moins 8 chiffres'}">
+
+
+      </step>
+
       <h2>/me</h2>
       <step red lighten-1
         title       = "Authentification"

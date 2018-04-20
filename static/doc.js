@@ -55,20 +55,25 @@ Vue.component('step', {
           <div v-show="loading" class="progress">
             <div class="indeterminate"></div>
           </div>
-          <div class="return">
-            <pre>
+          <div class="return_response">
+          <template v-if="require_oauth">
+            <a  v-on:click="call_curl_cmd()"
+                class="test cyan darken-1 waves-effect waves-light btn right top"
+                v-bind:class="{ disabled: !can_test_oauth}" ><i class="material-icons right">confirmation_number</i>Test</a>
+          </template>
+          <template v-else-if="require_login">
+            <a  v-on:click="call_curl_cmd()"
+                class="test orange darken-3 waves-effect waves-light btn right top"
+                v-bind:class="{ disabled: !can_test_login}"><i class="material-icons right">verified_user</i>test</a>
+          </template>
+          <template v-else>
+            <a  v-on:click="call_curl_cmd()"
+                class="test brown darken-1 darken-3 waves-effect waves-light btn right top"
+                v-bind:class="{ disabled: !can_test_login}"><i class="material-icons right">explore</i>test</a>
+          </template>
+            <div class="block_face">
               {{m_json_return}}
-            </pre>
-            <template v-if="require_oauth">
-              <a  v-on:click="call_curl_cmd()"
-                  class="test cyan darken-1 waves-effect waves-light btn right top"
-                  v-bind:class="{ disabled: !can_test_oauth}" ><i class="material-icons right">confirmation_number</i>Test</a>
-            </template>
-            <template v-if="require_login">
-              <a  v-on:click="call_curl_cmd()"
-                  class="test orange darken-3 waves-effect waves-light btn right top"
-                  v-bind:class="{ disabled: !can_test_login}"><i class="material-icons right">verified_user</i>test</a>
-            </template>
+            </div>
           </div>
       </div>
     </div>
