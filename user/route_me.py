@@ -67,3 +67,28 @@ def me_profil():
         error = e.error
 
     return jsonify({"error" : error.to_dict(), "me" : sanitizer(peto)})
+
+@route_me.route('/signin/captcha', methods=['GET'])
+def signin_captcha():
+    from captcha_gen.capt import generate_captcha
+    import base64
+    error = Error()
+    image, uuid = generate_captcha()
+    captcha_64  = base64.b64encode(image.getvalue())
+
+    response = {"image" : captcha_64, "uuid" : uuid}
+    return jsonify({"error" : error.to_dict(), "captcha" : response})
+
+@route_me.route('/signin', methods=['POST'])
+def signin_confirm():
+    from captcha_gen.capt import is_captcha_valid
+    error = Error()
+
+    try:
+        data = request.get_json()
+        print "valid? ", is_captcha_valid(data["uuid"], data["value"])
+
+    except ErrorException as e:
+        error = e.error
+
+    return jsonify({"error" : error.to_dict()})

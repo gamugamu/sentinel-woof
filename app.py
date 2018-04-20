@@ -7,6 +7,7 @@ from images_upload.uploader import bucket_setup
 from pet.route_woof import route as pet_route
 from test.route_test import route as test_route
 from friends.route_friends import route as friends_route
+from captcha_gen.capt import setup as capt_setup
 from os import environ
 
 
@@ -18,6 +19,7 @@ app.config['DEBUG'] = True
 # que l'appli ne peut pas acceder à ces url hors docker. En externe, on veut
 # réacceder à localhost de manière normal, donc on bypass cette configuration si hors Docker.
 if environ.get('NUC') is not None:
+    #TODO refactor
     app.config['SENTINEL_MONGO_URI'] = "mongodb://mongodb"
     app.config['SENTINEL_REDIS_URL'] = "redis://redisdb:6379/0"
 
@@ -26,6 +28,7 @@ from storage import models
 pet_route(app)
 test_route(app)
 friends_route(app)
+capt_setup(environ.get('NUC'))
 
 #TODO refactor
 app.register_blueprint(route_me)

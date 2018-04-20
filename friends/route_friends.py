@@ -34,7 +34,7 @@ def friends(friend):
                 raise ErrorException(Error(code=Error_code.FRNDALONE))
             else:
                 # add friend
-                friend = friend_from_request(friend)
+                friend = friend_from_request(seed)
                 ask_friend(peto=peto, friend=friend)
                 commit()
 

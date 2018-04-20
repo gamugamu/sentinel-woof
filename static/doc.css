@@ -99,8 +99,6 @@ pre {
   margin: 0;
   height: 50px;
   overflow: hidden;
-
-  overflow:auto;
 }
 
 .indent{
@@ -115,5 +113,5 @@ pre {
   height: 40px;
   padding: 0px;
   margin: 0px;
-  background-color: AliceBlue ;
+  background-color: AliceBlue;
 }
