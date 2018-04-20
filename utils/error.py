@@ -10,6 +10,7 @@ class Error_code(Enum):
     FEEDNOTFND  = 26
     MALFSCHE    = 50
     WRGDCTYPE   = 70
+    INVCAPTCH   = 80
     PETNAMEEX   = 110
     PETMAXLIM   = 111
     FRNDALONE   = 120
@@ -26,6 +27,7 @@ info_error = {
     Error_code.FEEDNOTFND   : "Feed introuvable",
     Error_code.MALFSCHE     : "Schema invalide",
     Error_code.WRGDCTYPE    : "The content-type is wrong. Please provide the -H 'Content-Type: multipart/form-data' in order to post a data",
+    Error_code.INVCAPTCH    : "Invalid uuid / captcha value",
     Error_code.PETNAMEEX    : "Nom invalide. (Doublon)",
     Error_code.PETMAXLIM    : "Limite de creation de pets atteint",
     Error_code.FRNDALONE    : "No. You are alone forever", # can't add self as friend

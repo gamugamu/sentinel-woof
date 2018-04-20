@@ -35,7 +35,7 @@ def me_oauth():
     except ErrorException as e:
         error = e.error
     # retourne le compte
-    return jsonify({"error" : error.to_dict(), "oauth" : token})
+    return jsonify({"error" : error.to_dict(), "token" : token})
 
 # Info utilisateur. Retourne les infos de l'utilisateurs. Mutable sauf le seed.
 @route_me.route('/me', methods=['GET', 'PUT', 'DELETE'])
@@ -68,27 +68,37 @@ def me_profil():
 
     return jsonify({"error" : error.to_dict(), "me" : sanitizer(peto)})
 
+#TODO pas safe pour le brut force
 @route_me.route('/signin/captcha', methods=['GET'])
 def signin_captcha():
     from captcha_gen.capt import generate_captcha
     import base64
-    error = Error()
+    # Ne peut pas échouer
     image, uuid = generate_captcha()
     captcha_64  = base64.b64encode(image.getvalue())
 
     response = {"image" : captcha_64, "uuid" : uuid}
-    return jsonify({"error" : error.to_dict(), "captcha" : response})
+    return jsonify({"error" : Error().to_dict(), "captcha" : response})
 
 @route_me.route('/signin', methods=['POST'])
 def signin_confirm():
     from captcha_gen.capt import is_captcha_valid
+    from user.credential import create_account_session
+
     error = Error()
+    token = {}
 
     try:
-        data = request.get_json()
-        print "valid? ", is_captcha_valid(data["uuid"], data["value"])
+        sanitized = schema.validate_signin(request.json)
+
+        if is_captcha_valid(sanitized["uuid"], sanitized["value"]):
+            # Note, user n'est pas utile ici. Mais au moins il est crée pour
+            # l'identification
+            token = create_account_session(sanitized["client_id"], sanitized["mail"], sanitized["password"])
+        else:
+            raise ErrorException(Error(code=Error_code.INVCAPTCH))
 
     except ErrorException as e:
         error = e.error
 
-    return jsonify({"error" : error.to_dict()})
+    return jsonify({"error" : error.to_dict(), "token" : token})

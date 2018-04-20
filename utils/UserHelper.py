@@ -16,7 +16,7 @@ def user_from_credential(name, password):
         return user
 
 # copy l'utilisateur
-def mirrored_petsOwner(sentinel_id, provider_id):
+def mirrored_petsOwner(sentinel_id , provider_id): # sentinel_id -> login, provider_id -> passw
     from storage.models import PetsOwner, add_n_commit, commit
     import petname
     string_id   = str(sentinel_id)

@@ -11,7 +11,6 @@ image   = ImageCaptcha(fonts=[font_path])
 r       = None
 
 def setup(conf):
-    print "conf ", conf
     global r
     if conf is None:
         r = redis.StrictRedis(host='localhost', port=6379, db=1)

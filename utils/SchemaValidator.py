@@ -27,8 +27,6 @@ def validate_refresh_token(data):
         raise ErrorException(error)
 
 def validate_me(data):
-    if not data:
-        return "{}", 'not in json format or empty'
     try:
         schema = Schema({   Optional('mail')    : Regex(r'\w+@\w+'),
                             Optional('name')    : basestring
@@ -41,8 +39,6 @@ def validate_me(data):
         raise ErrorException(error)
 
 def validate_pet(data):
-    if not data:
-        return "{}", 'not in json format or empty'
     try:
         schema = Schema({   'name' : basestring,
                         }, ignore_extra_keys=True)
@@ -53,16 +49,18 @@ def validate_pet(data):
         error = Error(code=Error_code.MALFSCHE, custom_message=str(e))
         raise ErrorException(error)
 
-def validate_feed(data, image_optional=False):
+def validate_signin(data, image_optional=False):
     from werkzeug.datastructures import FileStorage
 
-    if not data:
-        return "{}", 'not in json format or empty'
     try:
-        schema = Schema({   Optional('image') if image_optional else 'image' : FileStorage,
-        #TODO externaliser limitation text
-                            Optional('comment') : And(basestring, lambda s: len(s) < 240)
-                        }, ignore_extra_keys=True)
+        schema = Schema({
+                            'mail'      : Regex(r'\w+@\w+'),
+                            'password'  : Regex(r'^(?=^.{10,}$)(?=.*?\d)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?)'),
+                            'client_id' : basestring,
+                            'uuid'      : basestring,
+                            'value'     : basestring
+                        })
+
 
         return schema.validate(data)
 

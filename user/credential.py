@@ -63,16 +63,34 @@ def conversion(data):
 
     return token
 
-def refresh(data):
-    r  = requests.post(internal_url(url_for('access_token')),
-                data = {
-                    'client_id'         : data["client_id"],
-                    'grant_type'        : 'refresh_token',
-                    'refresh_token'     : data["refresh_token"]})
-    token = json.loads(r.text)
+def create_account_session(client_id, user_id, user_pass):
+    try:
+        _user   = user_from_credential(user_id, user_pass)
+        r       = requests.post(internal_url(url_for('access_token')),
+                        data = {
+                            'client_id' : client_id,
+                            'grant_type': 'password',
+                            'username'  : user_id,
+                            'password'  : user_pass})
 
-    if token.get("error") is not None:
-        # mauvais token
-        raise ErrorException(Error(code=Error_code.INVGRANT))
-
+        token = json.loads(r.text)
+        # le client peut être invalide.
+        if "error" in token:
+            print "∆ error"
+            raise ErrorException(Error(code=Error_code.MALFSCHE, custom_message=token["error"]))
+        else:
+            print "found token ?", token
+            #Les données sont valides,et on peut en tout sécurité créer
+            # ou récupérer le petsowner (petsowner = user loggé)
+            T           = Storage.get_token(token["access_token"])
+            sent_id     = str(T.user._id)
+            # garanti d'être unique. Si le sent_id ne fait pas son taf.
+            # Créer si petowner n'existe pas
+            mirrored_petsOwner(T.user._id, user_pass)
+            #TODO: gestion du scope
+            token["scope"] = "user:mutable"
+    #pass. Rethrow
+    except ErrorException as e:
+        raise e
+        
     return token
