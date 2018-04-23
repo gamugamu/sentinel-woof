@@ -56,6 +56,10 @@
                 <input v-model="provider" id="facebook" value="facebook" class="with-gap" name="group1" type="radio" checked />
                 <span class="grey-text text-darken-2">Facebook</span>
               </label>
+              <label class="text-darken-2">
+                <input v-model="provider" id="woof" value="woofwoof" class="with-gap" name="group1" type="radio" checked />
+                <span class="grey-text text-darken-2">woofwoof</span>
+              </label>
             </center>
           </form>
           <div class="white input-field">
@@ -108,14 +112,14 @@
         v-bind:dyn_value   = "{
           'client_id'     : '*client_id',
           'provider'      : '*provider',
-          'authlogin'     : '*auth_login',
-          'secret'        : '*secret'}"
+          'authlogin'     : 'auth_login',
+          'secret'        : 'password (optional)'}"
 
         v-bind:data = "{
           'client_id'     : 'Le client id secret reçu par l\'administrateur',
-          'provider'      : 'le compte sur lequel se logger: google, yahoo, twitter, woof',
-          'token'         : 'le token d\'accès fourni par le provider',
-          'token_secret'  : '(facultatif) token secret si fourni par le provider (ex twitter)'}">
+          'provider'      : 'le compte sur lequel se logger: google, yahoo, twitter, woof.',
+          'authlogin'     : 'le token d\'accès fourni par le provider ou le login woof',
+          'secret'        : '(facultatif) token secret si fourni par le provider (ex twitter) ou le password woof'}">
       </step>
 
       <step red lighten-1

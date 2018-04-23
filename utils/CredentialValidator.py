@@ -8,12 +8,22 @@ from utils.error import *
 def request_user_info_by_token(authlogin, secret = "", provider = ""):
     # Si c'est un compte local (woofwoof) alors il faut vérifier que la clès du compte existe
     # Si la clès n'existe pas, le compte n'existe pas
+    #TODO enum refactor
     if provider == 'google':
         return request_user_info_google(authlogin)
+    elif provider == 'woofwoof':
+        return request_user_info_woof(authlogin, secret)
     elif provider == 'facebook':
         return request_user_info_facebook(authlogin)
     else:
-        raise ErrorException(Error(code=Error_code.NOTIMPL))
+        raise ErrorException(Error(code=Error_code.INVPROVD))
+
+def request_user_info_woof(authlogin, secret):
+    print "DATA LOGIN---> ", authlogin, secret
+    #user_cloud_info["id"]
+    #password    = user_cloud_info.get["password"]
+
+    return authlogin
 
 def request_user_info_facebook(authlogin):
     http = httplib2.Http()
