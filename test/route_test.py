@@ -16,7 +16,7 @@ route_test = Blueprint('route_test', __name__, template_folder='templates')
 def curl_cmd():
     # Note: Seulement trusted. Sandboxed dans docker
     proxy_url   = url_for('home', _external=True)
-    intern_url  = internal_url("/")
+    intern_url  = internal_url("/") + "/" # bug TODO
     cmd         = request.json['command']
 
     # curl est appelé en interne dans docker

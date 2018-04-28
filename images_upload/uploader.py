@@ -7,8 +7,13 @@ from minio.error import (ResponseError, BucketAlreadyOwnedByYou,
                          BucketAlreadyExists)
 import os
 from utils.error import *
+from os import environ
 
-BASE_URL    = "http://localhost:9000/"
+PORT_MINIO  = "9000"
+host_name   = 'minio' if environ.get('NUC') is not None else 'localhost'
+BASE_URL    = "http://" + host_name + ":" + PORT_MINIO + "/"
+
+print "HOST_NAME***** ", BASE_URL
 minioClient = None
 minioACCESS = "AKIAIOSFODNN7EXAMPLE"
 minioSECRET = "SECRETSECRET"
@@ -79,7 +84,7 @@ def bucket_setup(base_url):
     if base_url is not None:
         BASE_URL = base_url
 
-    minioClient = Minio('localhost:9000',
+    minioClient = Minio(host_name + ':' + PORT_MINIO,
                       access_key=minioACCESS,
                       secret_key=minioSECRET,
                       secure=False)

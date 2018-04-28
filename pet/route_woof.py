@@ -143,7 +143,6 @@ def pets_feeds(pet_name, current_page):
     from storage.models import Feed, delete_n_commit
     from sqlalchemy import and_, desc
 
-
     error = Error()
     feeds = {}
     pages = {}

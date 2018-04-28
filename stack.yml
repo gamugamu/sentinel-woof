@@ -30,8 +30,21 @@ services:
       - 6379:6379
 
 
+  minio:
+    image: minio/minio
+    container_name: "minio"
+    command: server /data
+    #volumes:
+    #  - minio1-data:/export
+    ports:
+      - "9000:9000"
+
+    environment:
+      MINIO_ACCESS_KEY: AKIAIOSFODNN7EXAMPLE
+      MINIO_SECRET_KEY: SECRETSECRET
+
   woofapi:
-    image: cryptodraco/sentinel-dev:v0.0.8
+    image: cryptodraco/sentinel-dev:v0.0.9
     container_name: "waf-api"
     hostname: woofapi
     restart: always
@@ -43,9 +56,12 @@ services:
       - NUC=1 #environement de dev
       - NEED_HTTPS_FOR=wannanosuurus
       - INTERNAL_URL=http://woofapi:8080 #doit mapper hostname + port externe
+    depends_on:
+      - minio
     links:
       - db
       - mongodb
       - redisdb
+      - minio
     ports:
-      - 5002:8080
+      - 8080:8080
