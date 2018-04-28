@@ -29,6 +29,7 @@ def me_oauth():
         # Sinon c'est une demande de ticket via un provider (google, facebook, twitter)
         else:
             # valide que les clès sont bonnes
+            print "continue** "
             sanitized   = schema.validate_userbycredential(request.json)
             token       = credential.conversion(sanitized)
 

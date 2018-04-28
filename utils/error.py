@@ -5,6 +5,7 @@ class Error_code(Enum):
     NO_OP       = -1
     SUCCESS     = 0
     INVGRANT    = 10
+    INVPROVD    = 11
     USERNOTFD   = 20
     PETNOTFD    = 25
     FEEDNOTFND  = 26
@@ -22,6 +23,7 @@ info_error = {
     Error_code.NO_OP        : "Nothing Happened",
     Error_code.SUCCESS      : "Operation succeed",
     Error_code.INVGRANT     : "Grant token invalid",
+    Error_code.INVPROVD     : "Provider invalid",
     Error_code.USERNOTFD    : "Pet owner not found",
     Error_code.PETNOTFD     : "Pet introuvable",
     Error_code.FEEDNOTFND   : "Feed introuvable",

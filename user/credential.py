@@ -21,14 +21,16 @@ def internal_url(uri):
 def conversion(data):
     # valide que le credential du provider est bon
     try:
+        print "COnversion*** ", data
         provider        = data.get("provider")
         user_cloud_info = credential.request_user_info_by_token(data.get("authlogin"), data.get("secret"), provider)
         token           = {}
         print "++++ convert ?", user_cloud_info
 
         #TODO user_info doit être similaire entre woofwoof, google, yahoo, et twitter
-        user_id     = user_cloud_info["id"]
-        user_pass   = hashlib.sha224(user_id).hexdigest()
+        user_id         = user_cloud_info["id"]
+        has_password    = hasattr(user_cloud_info, "password")
+        user_pass       = hashlib.sha224( user_cloud_info["password"] if has_password else user_id ).hexdigest()
         # note: _user est privé. Ne pas exposer aux clients.
         # *** Fait l'authentification côté serveur ***
         _user   = user_from_credential(user_id, user_pass)
@@ -92,5 +94,5 @@ def create_account_session(client_id, user_id, user_pass):
     #pass. Rethrow
     except ErrorException as e:
         raise e
-        
+
     return token
