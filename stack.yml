@@ -32,7 +32,7 @@ services:
 
   minio:
     image: minio/minio
-    container_name: "minio"
+    container_name: "waf-minio"
     command: server /data
     #volumes:
     #  - minio1-data:/export
@@ -55,7 +55,7 @@ services:
     environment:
       - NUC=1 #environement de dev
       - NEED_HTTPS_FOR=wannanosuurus
-      - INTERNAL_URL=http://woofapi:8080 #doit mapper hostname + port externe
+      - INTERNAL_URL=http://woofapi:8080/ #doit mapper hostname + port externe + /
     depends_on:
       - minio
     links:

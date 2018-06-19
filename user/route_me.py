@@ -17,6 +17,8 @@ def me_oauth():
     from utils import SchemaValidator as schema
     import credential
 
+    print "/me/oauth"
+    
     error = Error()
     token = {}
     try:

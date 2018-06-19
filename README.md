@@ -16,7 +16,7 @@ docker run -d -p 5432:5432 --name waf-postgres -e POSTGRES_PASSWORD=secretpasswo
 docker exec -it waf-postgres bash
 /# psql -U postgres
 /# CREATE DATABASE woof;
-/# \q;
+/# \q
 en local psql -h localhost -p 5432 -U postgres -W  devrait marcher
 -> deja fait python manage.py db init
 python manage.py db migrate
