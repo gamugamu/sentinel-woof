@@ -65,6 +65,21 @@ def conversion(data):
 
     return token
 
+
+def refresh(data):
+    """ rafraichit le token """
+    r  = requests.post(internal_url(url_for('access_token')),
+                data = {
+                    'client_id'         : data["client_id"],
+                    'grant_type'        : 'refresh_token',
+
+                    'refresh_token'     : data["refresh_token"]})
+    token = json.loads(r.text)
+
+    if token.get("error") is not None:
+        # mauvais token
+        raise ErrorException(Error(code=Error_code.INVGRANT))
+
 def create_account_session(client_id, user_id, user_pass):
     try:
         _user   = user_from_credential(user_id, user_pass)
